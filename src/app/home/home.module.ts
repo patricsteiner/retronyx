@@ -5,18 +5,10 @@ import { FormsModule } from '@angular/forms';
 import { HomePage } from './home.page';
 
 import { HomePageRoutingModule } from './home-routing.module';
-import {RetroCardComponent} from "./retro-card/retro-card.component";
-
+import { RetroCardComponent } from './retro-card/retro-card.component';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FormsModule,
-    IonicModule,
-    HomePageRoutingModule
-  ],
-  declarations: [HomePage, RetroCardComponent]
+  imports: [CommonModule, FormsModule, IonicModule, HomePageRoutingModule],
+  declarations: [HomePage, RetroCardComponent],
 })
-export class HomePageModule {
-
-}
+export class HomePageModule {}

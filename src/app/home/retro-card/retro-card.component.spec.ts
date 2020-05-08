@@ -9,8 +9,8 @@ describe('RetroCardComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ RetroCardComponent ],
-      imports: [IonicModule.forRoot()]
+      declarations: [RetroCardComponent],
+      imports: [IonicModule.forRoot()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(RetroCardComponent);

@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
-import {Observable} from "rxjs";
-import {RetroBoard, RetroCardItem} from "./model";
-import {RetroBoardService} from "./retro-board.service";
+import { Observable } from 'rxjs';
+import { RetroBoard, RetroCardItem } from './model';
+import { RetroBoardService } from './retro-board.service';
 
 @Component({
   selector: 'app-home',
@@ -9,7 +9,6 @@ import {RetroBoardService} from "./retro-board.service";
   styleUrls: ['home.page.scss'],
 })
 export class HomePage {
-
   retroBoard$: Observable<RetroBoard> = this.retroBoardService.retroBoard$;
 
   constructor(private retroBoardService: RetroBoardService) {}
@@ -21,6 +20,7 @@ export class HomePage {
   addSadItem(item: RetroCardItem) {
     this.retroBoardService.addSadItem(item);
   }
+
   addIdeaItem(item: RetroCardItem) {
     this.retroBoardService.addIdeaItem(item);
   }
@@ -44,5 +44,4 @@ export class HomePage {
   likeFlowerItem(index: number) {
     this.retroBoardService.likeFlowerItem(index);
   }
-
 }

@@ -1,15 +1,15 @@
 export interface RetroBoard {
-    happyCard: RetroCard;
-    sadCard: RetroCard;
-    ideaCard: RetroCard;
-    flowerCard: RetroCard;
+  happyCard: RetroCard;
+  sadCard: RetroCard;
+  ideaCard: RetroCard;
+  flowerCard: RetroCard;
 }
 
 export interface RetroCard {
-    items: RetroCardItem[];
+  items: RetroCardItem[];
 }
 
 export interface RetroCardItem {
-    text: string;
-    likes?: number;
+  text: string;
+  likes?: number;
 }
