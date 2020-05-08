@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { RetroCardItem } from '../model';
+import { RetroCard, RetroCardItem } from '../model';
 
 @Component({
   selector: 'app-retro-card',
@@ -13,20 +13,29 @@ export class RetroCardComponent {
   @Input()
   items: RetroCardItem[];
 
-  @Output()
-  itemAdded = new EventEmitter<RetroCardItem>();
+  @Input()
+  retroCard: RetroCard;
 
   @Output()
-  itemLiked = new EventEmitter<number>();
+  cardUpdated = new EventEmitter<RetroCard>();
 
   itemText: string;
 
   like(index: number) {
-    this.itemLiked.emit(index);
+    const newItems = [...this.retroCard.items];
+    if (newItems[index].likes) {
+      newItems[index].likes++;
+    } else {
+      newItems[index].likes = 1;
+    }
+    const newCard = { ...this.retroCard, items: newItems };
+    this.cardUpdated.emit(newCard);
   }
 
   private addItem(item: RetroCardItem) {
-    this.itemAdded.emit(item);
+    const newItems = [...this.retroCard.items, item];
+    const newCard = { ...this.retroCard, items: newItems };
+    this.cardUpdated.emit(newCard);
   }
 
   submit() {

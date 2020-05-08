@@ -4,7 +4,7 @@
   </ion-card-header>
   <ion-card-content>
     <ion-list>
-      <ion-item-sliding *ngFor="let item of items; let i = index">
+      <ion-item-sliding *ngFor="let item of retroCard.items; let i = index">
         <ion-item>
           <ion-label>{{ item.text }}</ion-label>
           <ion-button fill="clear" (click)="like(i)">👍</ion-button>

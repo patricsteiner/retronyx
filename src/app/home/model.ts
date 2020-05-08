@@ -1,11 +1,10 @@
 export interface RetroBoard {
-  happyCard: RetroCard;
-  sadCard: RetroCard;
-  ideaCard: RetroCard;
-  flowerCard: RetroCard;
+  title: string;
+  cards: RetroCard[];
 }
 
 export interface RetroCard {
+  title: string;
   items: RetroCardItem[];
 }
 

@@ -14,41 +14,16 @@
   </ion-header>
 
   <ion-grid *ngIf="retroBoard$ | async as retroBoard">
-    <ion-row>
-      <ion-col size-md="6">
-        <app-retro-card
-          title="😁"
-          [items]="retroBoard.happyCard.items"
-          (itemAdded)="addHappyItem($event)"
-          (itemLiked)="likeHappyItem($event)"
-        ></app-retro-card>
-      </ion-col>
-      <ion-col size-md="6">
-        <app-retro-card
-          title="😥"
-          [items]="retroBoard.sadCard.items"
-          (itemAdded)="addSadItem($event)"
-          (itemLiked)="likeSadItem($event)"
-        ></app-retro-card>
-      </ion-col>
-    </ion-row>
-    <ion-row>
-      <ion-col size-md="6">
-        <app-retro-card
-          title="💡"
-          [items]="retroBoard.ideaCard.items"
-          (itemAdded)="addIdeaItem($event)"
-          (itemLiked)="likeIdeaItem($event)"
-        ></app-retro-card>
-      </ion-col>
-      <ion-col size-md="6">
-        <app-retro-card
-          title="🌷"
-          [items]="retroBoard.flowerCard.items"
-          (itemAdded)="addFlowerItem($event)"
-          (itemLiked)="likeFlowerItem($event)"
-        ></app-retro-card>
-      </ion-col>
-    </ion-row>
+    <div *ngFor="let i of [0, 1]">
+      <ion-row>
+        <ion-col size-md="6" *ngFor="let j of [0,1]">
+          <app-retro-card
+            [title]="retroBoard.cards[i*2+j].title"
+            [retroCard]="retroBoard.cards[i*2+j]"
+            (cardUpdated)="updateCard($event)"
+          ></app-retro-card>
+        </ion-col>
+      </ion-row>
+    </div>
   </ion-grid>
 </ion-content>
