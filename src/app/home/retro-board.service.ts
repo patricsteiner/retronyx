@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { RetroBoard, RetroCard, RetroCardItem } from './model';
 import { shareReplay, startWith, tap } from 'rxjs/operators';
+import { AngularFirestore } from '@angular/fire/firestore';
 
 const EMPTY_RETRO_BOARD = {
   title: 'Onyx Retroboard',
@@ -21,19 +22,24 @@ export class RetroBoardService {
 
   retroBoardSubject = new Subject();
 
-  public retroBoard$: Observable<RetroBoard> = this.retroBoardSubject.pipe(
-    startWith<RetroBoard>(EMPTY_RETRO_BOARD),
-    tap((board) => (this.currentBoard = board)),
-    shareReplay(1)
-  );
+  constructor(private firestore: AngularFirestore) {}
+
+  public retroBoard$: Observable<RetroBoard> = this.firestore
+    .doc<RetroBoard>('boards/onyx')
+    .valueChanges()
+    .pipe(
+      // startWith<RetroBoard>(EMPTY_RETRO_BOARD),
+      tap((board) => (this.currentBoard = board)),
+      shareReplay(1)
+    );
 
   updateCard(newCard: RetroCard) {
     const newBoard = { ...this.currentBoard };
-    for (let card of newBoard.cards) {
+    for (const card of newBoard.cards) {
       if (card.title === newCard.title) {
         card.items = [...newCard.items];
       }
     }
-    this.retroBoardSubject.next(newBoard);
+    this.firestore.doc<RetroBoard>('boards/onyx').update(newBoard);
   }
 }
