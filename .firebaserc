@@ -1,5 +1,14 @@
 {
   "projects": {
     "default": "retro-nyx"
+  },
+  "targets": {
+    "retro-nyx": {
+      "hosting": {
+        "app": [
+          "onyxretro"
+        ]
+      }
+    }
   }
 }
