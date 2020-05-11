@@ -17,3 +17,7 @@ ion-select {
   text-align: center;
   margin: auto;
 }
+
+::ng-deep .alert-sub-title {
+  color: red !important;
+}

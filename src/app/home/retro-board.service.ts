@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { RetroBoard, RetroCard } from './model';
-import { map, shareReplay, switchMap, tap } from 'rxjs/operators';
+import { first, map, shareReplay, switchMap, tap } from 'rxjs/operators';
 import { AngularFirestore } from '@angular/fire/firestore';
 
 @Injectable({
@@ -24,7 +24,7 @@ export class RetroBoardService {
       shareReplay(1)
     );
 
-  public retroBoard$: Observable<RetroBoard> = this.selectedBoardIdSubject.pipe(
+  public selectedBoard$: Observable<RetroBoard> = this.selectedBoardIdSubject.pipe(
     switchMap((id) => this.retroBoards$.pipe(map((boards) => boards.find((board) => board.id === id)))),
     tap((board) => (this.currentBoard = board))
   );
@@ -45,6 +45,10 @@ export class RetroBoardService {
 
   async createNewBoard(title: string) {
     const board = new RetroBoard(title);
+    const allBoards = await this.retroBoards$.pipe(first()).toPromise();
+    if (allBoards.map((board) => board.title).includes(title)) {
+      return Promise.reject();
+    }
     return this.boardsCollection.add({ ...board });
   }
 

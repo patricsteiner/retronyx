@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { Observable } from 'rxjs';
 import { RetroBoard, RetroCard } from './model';
 import { RetroBoardService } from './retro-board.service';
-import { AlertController } from '@ionic/angular';
+import { AlertController, PopoverController } from '@ionic/angular';
 
 @Component({
   selector: 'app-home',
@@ -10,10 +10,14 @@ import { AlertController } from '@ionic/angular';
   styleUrls: ['home.page.scss'],
 })
 export class HomePage {
-  retroBoard$: Observable<RetroBoard> = this.retroBoardService.retroBoard$;
+  retroBoard$: Observable<RetroBoard> = this.retroBoardService.selectedBoard$;
   retroBoards$: Observable<RetroBoard[]> = this.retroBoardService.retroBoards$;
 
-  constructor(private retroBoardService: RetroBoardService, private alertController: AlertController) {}
+  constructor(
+    private retroBoardService: RetroBoardService,
+    private alertController: AlertController,
+    private popoverController: PopoverController
+  ) {}
 
   updateCard(card: RetroCard) {
     this.retroBoardService.updateCard(card);
@@ -24,8 +28,13 @@ export class HomePage {
   }
 
   async createNewBoard() {
-    const alert = await this.alertController.create({
+    this.showInputDialog('');
+  }
+
+  async showInputDialog(error: string) {
+    const alertDialog = await this.alertController.create({
       header: 'Neues Retro Board erstellen',
+      subHeader: error,
       inputs: [
         {
           name: 'title',
@@ -43,14 +52,17 @@ export class HomePage {
           text: 'OK',
           handler: (input) => {
             if (!input.title) return false;
-            this.retroBoardService
-              .createNewBoard(input.title)
-              .then((ref) => this.retroBoardService.selectBoard(ref.id));
+            this.retroBoardService.createNewBoard(input.title).then(
+              (ref) => this.retroBoardService.selectBoard(ref.id),
+              () => {
+                this.showInputDialog('Dieser Titel wird bereits verwendet');
+              }
+            );
           },
         },
       ],
     });
-    alert.present();
+    alertDialog.present();
   }
 
   deleteBoard(id: string) {
