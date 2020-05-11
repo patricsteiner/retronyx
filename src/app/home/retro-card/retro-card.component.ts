@@ -33,7 +33,18 @@ export class RetroCardComponent {
   }
 
   private addItem(item: RetroCardItem) {
-    const newItems = [...this.retroCard.items, item];
+    const index = this.retroCard.items.findIndex((i) => i.text === item.text);
+    if (index > -1) {
+      this.like(index);
+    } else {
+      const newItems = [...this.retroCard.items, item];
+      const newCard = { ...this.retroCard, items: newItems };
+      this.cardUpdated.emit(newCard);
+    }
+  }
+
+  private deleteItem(item: RetroCardItem) {
+    const newItems = this.retroCard.items.filter((i) => i.text !== item.text);
     const newCard = { ...this.retroCard, items: newItems };
     this.cardUpdated.emit(newCard);
   }

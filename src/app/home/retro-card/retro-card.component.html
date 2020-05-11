@@ -11,11 +11,11 @@
           <ion-badge color="tertiary">{{ item.likes }}</ion-badge>
         </ion-item>
         <ion-item-options side="end">
-          <ion-item-option (click)="(null)" color="danger">Löschen</ion-item-option>
+          <ion-item-option (click)="deleteItem(item)" color="danger">Löschen</ion-item-option>
         </ion-item-options>
       </ion-item-sliding>
       <ion-item>
-        <ion-input placeholder="Eintrag hinzufügen..." [(ngModel)]="itemText"></ion-input>
+        <ion-input placeholder="Eintrag hinzufügen..." [(ngModel)]="itemText" (keydown.enter)="submit()"></ion-input>
         <ion-fab-button slot="end" color="primary" size="small" [disabled]="!itemText" (click)="submit()">
           <ion-icon name="add-outline"></ion-icon>
         </ion-fab-button>

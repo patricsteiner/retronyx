@@ -4,23 +4,11 @@ import { RetroBoard, RetroCard, RetroCardItem } from './model';
 import { shareReplay, startWith, tap } from 'rxjs/operators';
 import { AngularFirestore } from '@angular/fire/firestore';
 
-const EMPTY_RETRO_BOARD = {
-  title: 'Onyx Retroboard',
-  cards: [
-    { title: 'happy', items: [] },
-    { title: 'sad', items: [] },
-    { title: 'idea', items: [] },
-    { title: 'flower', items: [] },
-  ],
-};
-
 @Injectable({
   providedIn: 'root',
 })
 export class RetroBoardService {
   private currentBoard: RetroBoard;
-
-  retroBoardSubject = new Subject();
 
   constructor(private firestore: AngularFirestore) {}
 
@@ -28,7 +16,6 @@ export class RetroBoardService {
     .doc<RetroBoard>('boards/onyx')
     .valueChanges()
     .pipe(
-      // startWith<RetroBoard>(EMPTY_RETRO_BOARD),
       tap((board) => (this.currentBoard = board)),
       shareReplay(1)
     );
@@ -42,4 +29,6 @@ export class RetroBoardService {
     }
     this.firestore.doc<RetroBoard>('boards/onyx').update(newBoard);
   }
+
+  // create
 }
