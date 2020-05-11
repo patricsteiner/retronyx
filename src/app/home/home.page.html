@@ -3,6 +3,31 @@
     <ion-title>
       Retronyx
     </ion-title>
+    <ion-select
+      placeholder="Board auswählen"
+      interface="popover"
+      (ionChange)="selectBoard($event.detail.value)"
+      [value]="(retroBoard$ | async)?.id"
+    >
+      <ion-select-option *ngFor="let board of retroBoards$ | async" [value]="board.id"
+        >{{board.title}}</ion-select-option
+      >
+    </ion-select>
+    <!--    <ion-buttons >-->
+    <ion-fab-button color="primary" size="small" slot="start" (click)="createNewBoard()">
+      <ion-icon name="add-outline"></ion-icon>
+    </ion-fab-button>
+    <!--    </ion-buttons>-->
+    <ion-fab-button
+      *ngIf="retroBoard$ | async as retroBoard"
+      color="danger"
+      size="small"
+      slot="end"
+      (click)="deleteBoard(retroBoard.id)"
+    >
+      <ion-icon name="trash-outline"></ion-icon>
+    </ion-fab-button>
+    <ion-button (click)="this.retroBoardService.deleteAll()" color="danger" fill="outline">DELETE ALL</ion-button>
   </ion-toolbar>
 </ion-header>
 
@@ -13,7 +38,7 @@
     </ion-toolbar>
   </ion-header>
 
-  <ion-grid *ngIf="retroBoard$ | async as retroBoard">
+  <ion-grid *ngIf="retroBoard$ | async as retroBoard; else noBoardSelected">
     <div *ngFor="let i of [0, 1]">
       <ion-row>
         <ion-col size-md="6" *ngFor="let j of [0,1]">
@@ -27,3 +52,9 @@
     </div>
   </ion-grid>
 </ion-content>
+
+<ng-template #noBoardSelected>
+  <div id="noBoardSelected">
+    <h1>Bitte ein Board auswählen 🐱‍🐉</h1>
+  </div>
+</ng-template>

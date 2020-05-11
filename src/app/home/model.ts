@@ -1,16 +1,17 @@
 export class RetroBoard {
-  id: string;
+  readonly id: string;
+  readonly createdAt: Date;
   readonly title: string;
-  readonly cards = [
-    // TODO readonly weg?
-    { title: 'happy', items: [] },
-    { title: 'sad', items: [] },
-    { title: 'idea', items: [] },
-    { title: 'flower' },
+  readonly cards: RetroCard[] = [
+    { title: '😃', items: [] },
+    { title: '😥', items: [] },
+    { title: '💡', items: [] },
+    { title: '🌷', items: [] },
   ];
 
   constructor(title: string) {
     this.title = title;
+    this.createdAt = new Date();
   }
 }
 
