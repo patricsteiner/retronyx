@@ -36,7 +36,7 @@ export class RetroBoardService {
   async updateCard(newCard: RetroCard) {
     const newBoard = { ...this.currentBoard };
     for (const card of newBoard.cards) {
-      if (card.title === newCard.title) {
+      if (card.emoji === newCard.emoji) {
         card.items = [...newCard.items];
       }
     }
@@ -57,8 +57,8 @@ export class RetroBoardService {
   }
 
   async deleteAll() {
-    const allBoardsQuery: firebase.firestore.QuerySnapshot = await this.firestore.collection('boards').ref.get();
-    allBoardsQuery.forEach((doc) => {
+    const allBoardsQuerySnapshot = await this.boardsCollection.ref.get();
+    allBoardsQuerySnapshot.forEach((doc) => {
       doc.ref.delete();
     });
   }

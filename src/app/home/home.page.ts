@@ -62,6 +62,6 @@ export class HomePage {
   }
 
   deleteBoard(id: string) {
-    this.retroBoardService.deleteBoard(id);
+    if (confirm('Soll dieses Board wirklich gelöscht werden?')) this.retroBoardService.deleteBoard(id);
   }
 }

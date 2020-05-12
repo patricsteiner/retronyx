@@ -8,9 +8,6 @@ import { RetroCard, RetroCardItem } from '../model';
 })
 export class RetroCardComponent {
   @Input()
-  title: string;
-
-  @Input()
   items: RetroCardItem[];
 
   @Input()

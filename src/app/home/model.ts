@@ -3,10 +3,10 @@ export class RetroBoard {
   readonly createdAt: Date;
   readonly title: string;
   readonly cards: RetroCard[] = [
-    { title: '😃', items: [] },
-    { title: '😥', items: [] },
-    { title: '💡', items: [] },
-    { title: '🌷', items: [] },
+    { emoji: '😃', items: [] },
+    { emoji: '😥', items: [] },
+    { emoji: '💡', items: [] },
+    { emoji: '🌷', items: [] },
   ];
 
   constructor(title: string) {
@@ -16,7 +16,7 @@ export class RetroBoard {
 }
 
 export interface RetroCard {
-  title: string;
+  emoji: string;
   items: RetroCardItem[];
 }
 
