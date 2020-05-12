@@ -2,7 +2,9 @@ import { Component } from '@angular/core';
 import { Observable } from 'rxjs';
 import { RetroBoard, RetroCard } from './model';
 import { RetroBoardService } from './retro-board.service';
-import { AlertController } from '@ionic/angular';
+import { AlertController, NavController } from '@ionic/angular';
+import { ActivatedRoute } from '@angular/router';
+import { filter, map, switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-home',
@@ -10,17 +12,26 @@ import { AlertController } from '@ionic/angular';
   styleUrls: ['home.page.scss'],
 })
 export class HomePage {
-  retroBoard$: Observable<RetroBoard> = this.retroBoardService.selectedBoard$;
+  selectedBoard$: Observable<RetroBoard> = this.route.paramMap.pipe(
+    map((params) => params.get('id')),
+    filter((id) => !!id),
+    switchMap((id) => this.retroBoards$.pipe(map((boards) => boards.find((board) => board.id === id))))
+  );
   retroBoards$: Observable<RetroBoard[]> = this.retroBoardService.retroBoards$;
 
-  constructor(private retroBoardService: RetroBoardService, private alertController: AlertController) {}
+  constructor(
+    private retroBoardService: RetroBoardService,
+    private alertController: AlertController,
+    private route: ActivatedRoute,
+    private navCtrl: NavController
+  ) {}
 
-  updateCard(card: RetroCard) {
-    this.retroBoardService.updateCard(card);
+  updateCard(boardId: string, cardIndex: number, card: RetroCard) {
+    this.retroBoardService.updateCard(boardId, cardIndex, card);
   }
 
-  selectBoard(id: string) {
-    this.retroBoardService.selectBoard(id);
+  navigateToBoard(id: string) {
+    this.navCtrl.navigateForward('/home/' + id);
   }
 
   async createNewBoard() {
@@ -49,7 +60,7 @@ export class HomePage {
           handler: (input) => {
             if (!input.title) return false;
             this.retroBoardService.createNewBoard(input.title).then(
-              (ref) => this.retroBoardService.selectBoard(ref.id),
+              (ref) => this.navigateToBoard(ref.id),
               () => {
                 this.showInputDialog('Dieser Titel wird bereits verwendet');
               }
@@ -62,6 +73,9 @@ export class HomePage {
   }
 
   deleteBoard(id: string) {
-    if (confirm('Soll dieses Board wirklich gelöscht werden?')) this.retroBoardService.deleteBoard(id);
+    if (confirm('Soll dieses Board wirklich gelöscht werden?')) {
+      this.retroBoardService.deleteBoard(id);
+      this.navCtrl.navigateRoot('/home');
+    }
   }
 }

@@ -8,8 +8,8 @@
       <ion-select
         placeholder="Board auswählen..."
         interface="popover"
-        (ionChange)="selectBoard($event.detail.value)"
-        [value]="(retroBoard$ | async)?.id"
+        (ionChange)="navigateToBoard($event.detail.value)"
+        [value]="(selectedBoard$ | async)?.id"
       >
         <ion-select-option *ngFor="let board of retroBoards$ | async" [value]="board.id"
           >{{board.title}}</ion-select-option
@@ -22,26 +22,25 @@
         <ion-icon name="add-outline"></ion-icon>
       </ion-button>
       <ion-button
-        *ngIf="retroBoard$ | async as retroBoard"
+        *ngIf="selectedBoard$ | async as selectedBoard"
         color="danger"
         size="small"
         slot="end"
         fill="clear"
-        (click)="deleteBoard(retroBoard.id)"
+        (click)="deleteBoard(selectedBoard.id)"
       >
         <ion-icon name="trash-outline"></ion-icon>
       </ion-button>
-      <!--                  <ion-button (click)="this.retroBoardService.deleteAll()" color="danger" fill="outline">DELETE ALL-->
-      <!--                  </ion-button>-->
+      <ion-button (click)="this.retroBoardService.deleteAll()" color="danger" fill="outline">DELETE ALL </ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-grid *ngIf="retroBoard$ | async as retroBoard; else noBoardSelected">
+  <ion-grid *ngIf="selectedBoard$ | async as selectedBoard; else noBoardSelected">
     <ion-row>
-      <ion-col size="12" size-md="6" *ngFor="let card of retroBoard.cards">
-        <app-retro-card [retroCard]="card" (cardUpdated)="updateCard($event)"></app-retro-card>
+      <ion-col size="12" size-md="6" *ngFor="let card of selectedBoard.cards; let idx = index">
+        <app-retro-card [retroCard]="card" (cardUpdated)="updateCard(selectedBoard.id, idx, $event)"></app-retro-card>
       </ion-col>
     </ion-row>
   </ion-grid>
