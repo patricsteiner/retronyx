@@ -6,11 +6,8 @@
     <ion-list>
       <ion-item-sliding *ngFor="let item of retroCard.items; let i = index">
         <ion-item>
-          <div *ngIf="item.user">
-            {{ item.user }}
-          </div>
-          <div *ngIf="!item.user">
-            unbekannt
+          <div>
+            {{ item.user || 'unbekannt' }}
           </div>
           <ion-icon name="chatbubble-outline"></ion-icon>
           <div>:</div>

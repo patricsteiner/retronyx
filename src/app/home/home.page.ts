@@ -27,7 +27,9 @@ export class HomePage {
     private route: ActivatedRoute,
     private navCtrl: NavController,
     private userService: UserService
-  ) {}
+  ) {
+    this.userService.username$.subscribe((username) => (this.username = username));
+  }
 
   updateCard(boardId: string, cardIndex: number, card: RetroCard) {
     this.retroBoardService.updateCard(boardId, cardIndex, card);
@@ -82,7 +84,7 @@ export class HomePage {
     }
   }
 
-  login() {
-    this.userService.login(this.username);
+  async login() {
+    await this.userService.login(this.username);
   }
 }

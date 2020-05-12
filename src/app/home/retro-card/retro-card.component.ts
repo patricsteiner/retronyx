@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { RetroCard, RetroCardItem } from '../model';
 import { UserService } from '../../user.service';
 
@@ -51,7 +51,7 @@ export class RetroCardComponent {
 
   submit() {
     if (this.itemText) {
-      this.addItem({ text: this.itemText, user: this.userService.username$.getValue() });
+      this.addItem({ text: this.itemText, user: this.userService.currentUser() });
       this.itemText = '';
     }
   }
