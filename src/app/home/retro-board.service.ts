@@ -32,6 +32,7 @@ export class RetroBoardService {
   }
 
   async createNewBoard(title: string) {
+    title = title.substring(0, 50);
     const board = new RetroBoard(title);
     const allBoards = await this.retroBoards$.pipe(first()).toPromise();
     if (allBoards.map((board) => board.title).includes(title)) {

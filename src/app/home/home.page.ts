@@ -1,10 +1,10 @@
-import { Component } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Observable, Subject } from 'rxjs';
 import { RetroBoard, RetroCard } from './model';
 import { RetroBoardService } from './retro-board.service';
 import { AlertController, NavController } from '@ionic/angular';
 import { ActivatedRoute } from '@angular/router';
-import { filter, map, switchMap } from 'rxjs/operators';
+import { filter, map, switchMap, takeUntil } from 'rxjs/operators';
 import { UserService } from '../user.service';
 
 @Component({
@@ -12,7 +12,7 @@ import { UserService } from '../user.service';
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
 })
-export class HomePage {
+export class HomePage implements OnInit, OnDestroy {
   selectedBoard$: Observable<RetroBoard> = this.route.paramMap.pipe(
     map((params) => params.get('id')),
     filter((id) => !!id),
@@ -20,6 +20,7 @@ export class HomePage {
   );
   retroBoards$: Observable<RetroBoard[]> = this.retroBoardService.retroBoards$;
   username: string;
+  private destroy$ = new Subject();
 
   constructor(
     private retroBoardService: RetroBoardService,
@@ -27,8 +28,13 @@ export class HomePage {
     private route: ActivatedRoute,
     private navCtrl: NavController,
     private userService: UserService
-  ) {
-    this.userService.username$.subscribe((username) => (this.username = username));
+  ) {}
+
+  async ngOnInit() {
+    if (!(await this.userService.currentUser())) {
+      this.showLoginPopup();
+    }
+    this.userService.username$.pipe(takeUntil(this.destroy$)).subscribe((username) => (this.username = username));
   }
 
   updateCard(boardId: string, cardIndex: number, card: RetroCard) {
@@ -40,10 +46,10 @@ export class HomePage {
   }
 
   async createNewBoard() {
-    this.showInputDialog('');
+    this.showNewBoardPopup('');
   }
 
-  async showInputDialog(error: string) {
+  async showNewBoardPopup(error: string) {
     const alertDialog = await this.alertController.create({
       header: 'Neues Retro Board erstellen',
       subHeader: error,
@@ -63,13 +69,46 @@ export class HomePage {
         {
           text: 'OK',
           handler: (input) => {
-            if (!input.title) return false;
+            if (!input.title) {
+              return false;
+            }
             this.retroBoardService.createNewBoard(input.title).then(
               (ref) => this.navigateToBoard(ref.id),
               () => {
-                this.showInputDialog('Dieser Titel wird bereits verwendet');
+                this.showNewBoardPopup('Dieser Titel wird bereits verwendet');
               }
             );
+          },
+        },
+      ],
+    });
+    alertDialog.present();
+  }
+
+  async showLoginPopup() {
+    const alertDialog = await this.alertController.create({
+      header: 'Wie ist dein Name?',
+      subHeader: '',
+      inputs: [
+        {
+          name: 'name',
+          type: 'text',
+          placeholder: 'Bitte Name eingeben...',
+        },
+      ],
+      buttons: [
+        {
+          text: 'Abbrechen',
+          role: 'cancel',
+          cssClass: 'secondary',
+        },
+        {
+          text: 'OK',
+          handler: (input) => {
+            if (!input.name) {
+              return false;
+            }
+            this.userService.login(input.name);
           },
         },
       ],
@@ -86,5 +125,10 @@ export class HomePage {
 
   async login() {
     await this.userService.login(this.username);
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

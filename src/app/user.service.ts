@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage';
 import { BehaviorSubject } from 'rxjs';
+import { map } from 'rxjs/operators';
+
+const USERNAME_KEY = 'username';
 
 @Injectable({
   providedIn: 'root',
@@ -10,12 +13,12 @@ export class UserService {
 
   username$ = this.usernameSubject.asObservable();
 
-  currentUser(): string {
-    return this.usernameSubject.getValue();
+  async currentUser() {
+    return await this.storage.get(USERNAME_KEY);
   }
 
   constructor(private storage: Storage) {
-    this.storage.get('username').then((username) => {
+    this.storage.get(USERNAME_KEY).then((username) => {
       if (username) {
         this.usernameSubject.next(username);
       }
@@ -23,7 +26,8 @@ export class UserService {
   }
 
   login(username: string) {
+    username = username.substring(0, 20);
     this.usernameSubject.next(username);
-    return this.storage.set('username', username);
+    return this.storage.set(USERNAME_KEY, username);
   }
 }

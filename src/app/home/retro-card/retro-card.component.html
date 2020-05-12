@@ -6,12 +6,10 @@
     <ion-list>
       <ion-item-sliding *ngFor="let item of retroCard.items; let i = index">
         <ion-item>
-          <div>
-            {{ item.user || 'unbekannt' }}
-          </div>
-          <ion-icon name="chatbubble-outline"></ion-icon>
-          <div>:</div>
-          <ion-label>{{ item.text }}</ion-label>
+          <ion-chip [ngStyle]="{ background: '#' + (item.user | stringToColor) }">
+            <ion-label>{{ item.user || 'unbekannt' }}</ion-label>
+          </ion-chip>
+          <ion-label class="ion-text-wrap">{{ item.text }}</ion-label>
           <ion-button fill="clear" (click)="like(i)">👍</ion-button>
           <ion-badge color="tertiary">{{ item.likes }}</ion-badge>
         </ion-item>
@@ -20,7 +18,13 @@
         </ion-item-options>
       </ion-item-sliding>
       <ion-item>
-        <ion-input placeholder="Eintrag hinzufügen..." [(ngModel)]="itemText" (keydown.enter)="submit()"></ion-input>
+        <ion-input
+          placeholder="Eintrag hinzufügen..."
+          [(ngModel)]="itemText"
+          (keydown.enter)="submit()"
+          maxlength="200"
+          minlength="2"
+        ></ion-input>
         <ion-fab-button slot="end" color="primary" size="small" [disabled]="!itemText" (click)="submit()">
           <ion-icon name="add-outline"></ion-icon>
         </ion-fab-button>

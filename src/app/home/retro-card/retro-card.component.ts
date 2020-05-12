@@ -49,9 +49,9 @@ export class RetroCardComponent {
     this.cardUpdated.emit(newCard);
   }
 
-  submit() {
+  async submit() {
     if (this.itemText) {
-      this.addItem({ text: this.itemText, user: this.userService.currentUser() });
+      this.addItem({ text: this.itemText, user: await this.userService.currentUser() });
       this.itemText = '';
     }
   }
