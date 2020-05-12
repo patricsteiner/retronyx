@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { RetroCard, RetroCardItem } from '../model';
+import { UserService } from '../../user.service';
 
 @Component({
   selector: 'app-retro-card',
@@ -17,6 +18,8 @@ export class RetroCardComponent {
   cardUpdated = new EventEmitter<RetroCard>();
 
   itemText: string;
+
+  constructor(private userService: UserService) {}
 
   like(index: number) {
     const newItems = [...this.retroCard.items];
@@ -48,7 +51,7 @@ export class RetroCardComponent {
 
   submit() {
     if (this.itemText) {
-      this.addItem({ text: this.itemText });
+      this.addItem({ text: this.itemText, user: this.userService.username$.getValue() });
       this.itemText = '';
     }
   }

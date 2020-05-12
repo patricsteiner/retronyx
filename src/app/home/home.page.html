@@ -31,7 +31,8 @@
       >
         <ion-icon name="trash-outline"></ion-icon>
       </ion-button>
-      <ion-button (click)="this.retroBoardService.deleteAll()" color="danger" fill="outline">DELETE ALL </ion-button>
+      <ion-input placeholder="Bitte Name eingeben" [(ngModel)]="username" (ngModelChange)="login()"></ion-input>
+      <!-- <ion-button (click)="this.retroBoardService.deleteAll()" color="danger" fill="outline">DELETE ALL </ion-button> -->
     </ion-buttons>
   </ion-toolbar>
 </ion-header>

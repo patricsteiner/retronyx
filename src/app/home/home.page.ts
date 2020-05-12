@@ -5,6 +5,7 @@ import { RetroBoardService } from './retro-board.service';
 import { AlertController, NavController } from '@ionic/angular';
 import { ActivatedRoute } from '@angular/router';
 import { filter, map, switchMap } from 'rxjs/operators';
+import { UserService } from '../user.service';
 
 @Component({
   selector: 'app-home',
@@ -18,12 +19,14 @@ export class HomePage {
     switchMap((id) => this.retroBoards$.pipe(map((boards) => boards.find((board) => board.id === id))))
   );
   retroBoards$: Observable<RetroBoard[]> = this.retroBoardService.retroBoards$;
+  username: string;
 
   constructor(
     private retroBoardService: RetroBoardService,
     private alertController: AlertController,
     private route: ActivatedRoute,
-    private navCtrl: NavController
+    private navCtrl: NavController,
+    private userService: UserService
   ) {}
 
   updateCard(boardId: string, cardIndex: number, card: RetroCard) {
@@ -77,5 +80,9 @@ export class HomePage {
       this.retroBoardService.deleteBoard(id);
       this.navCtrl.navigateRoot('/home');
     }
+  }
+
+  login() {
+    this.userService.login(this.username);
   }
 }
