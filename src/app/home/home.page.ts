@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { Observable } from 'rxjs';
 import { RetroBoard, RetroCard } from './model';
 import { RetroBoardService } from './retro-board.service';
-import { AlertController, PopoverController } from '@ionic/angular';
+import { AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'app-home',
@@ -13,11 +13,7 @@ export class HomePage {
   retroBoard$: Observable<RetroBoard> = this.retroBoardService.selectedBoard$;
   retroBoards$: Observable<RetroBoard[]> = this.retroBoardService.retroBoards$;
 
-  constructor(
-    private retroBoardService: RetroBoardService,
-    private alertController: AlertController,
-    private popoverController: PopoverController
-  ) {}
+  constructor(private retroBoardService: RetroBoardService, private alertController: AlertController) {}
 
   updateCard(card: RetroCard) {
     this.retroBoardService.updateCard(card);
