@@ -17,16 +17,13 @@
       </ion-select>
     </ion-buttons>
 
-    <ion-buttons slot="end" style="opacity: 0.7;">
-      <ion-label>User:</ion-label>
+    <ion-buttons id="user" slot="end">
       <ion-input
-        style="text-align: left;"
         placeholder="Bitte Namen eingeben"
         [(ngModel)]="username"
         (ngModelChange)="login()"
         maxlength="20"
         minlength="1"
-        rtl
       ></ion-input>
     </ion-buttons>
 

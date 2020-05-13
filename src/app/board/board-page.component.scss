@@ -9,6 +9,13 @@
   margin: auto;
 }
 
+#user {
+  opacity: 0.7;
+  ion-input {
+    width: 170px;
+  }
+}
+
 ::ng-deep .alert-sub-title {
   color: red !important;
 }
