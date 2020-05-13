@@ -2,15 +2,15 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
-import { HomePage } from './home.page';
+import { BoardPage } from './board-page.component';
 
-import { HomePageRoutingModule } from './home-routing.module';
+import { BoardPageRoutingModule } from './board-routing.module';
 import { RetroCardComponent } from './retro-card/retro-card.component';
 import { ColorHashPipe } from './color-hash.pipe';
 
 @NgModule({
-  imports: [CommonModule, FormsModule, IonicModule, HomePageRoutingModule],
-  declarations: [HomePage, RetroCardComponent, ColorHashPipe],
+  imports: [CommonModule, FormsModule, IonicModule, BoardPageRoutingModule],
+  declarations: [BoardPage, RetroCardComponent, ColorHashPipe],
   exports: [ColorHashPipe],
 })
-export class HomePageModule {}
+export class BoardPageModule {}

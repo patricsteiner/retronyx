@@ -11,9 +11,9 @@
         (ionChange)="navigateToBoard($event.detail.value)"
         [value]="(selectedBoard$ | async)?.id"
       >
-        <ion-select-option *ngFor="let board of retroBoards$ | async" [value]="board.id"
-          >{{board.title}}</ion-select-option
-        >
+        <ion-select-option *ngFor="let board of retroBoards$ | async" [value]="board.id">{{
+          board.title
+        }}</ion-select-option>
       </ion-select>
     </ion-buttons>
 
@@ -38,7 +38,7 @@
         maxlength="20"
         minlength="1"
       ></ion-input>
-      <!-- <ion-button (click)="this.retroBoardService.deleteAll()" color="danger" fill="outline">DELETE ALL </ion-button> -->
+      <ion-button (click)="this.retroBoardService.deleteAll()" color="danger" fill="outline">DELETE ALL </ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>

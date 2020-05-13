@@ -8,11 +8,10 @@ import { filter, map, switchMap, takeUntil } from 'rxjs/operators';
 import { UserService } from '../user.service';
 
 @Component({
-  selector: 'app-home',
-  templateUrl: 'home.page.html',
-  styleUrls: ['home.page.scss'],
+  templateUrl: 'board-page.component.html',
+  styleUrls: ['board-page.component.scss'],
 })
-export class HomePage implements OnInit, OnDestroy {
+export class BoardPage implements OnInit, OnDestroy {
   selectedBoard$: Observable<RetroBoard> = this.route.paramMap.pipe(
     map((params) => params.get('id')),
     filter((id) => !!id),
@@ -42,7 +41,7 @@ export class HomePage implements OnInit, OnDestroy {
   }
 
   navigateToBoard(id: string) {
-    this.navCtrl.navigateForward('/home/' + id);
+    this.navCtrl.navigateForward('/board/' + id);
   }
 
   async createNewBoard() {
@@ -119,7 +118,7 @@ export class HomePage implements OnInit, OnDestroy {
   deleteBoard(id: string) {
     if (confirm('Soll dieses Board wirklich gelöscht werden?')) {
       this.retroBoardService.deleteBoard(id);
-      this.navCtrl.navigateRoot('/home');
+      this.navCtrl.navigateRoot('/board');
     }
   }
 
