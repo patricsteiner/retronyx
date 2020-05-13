@@ -10,10 +10,10 @@
             <ion-label [ngStyle]="{ color: item.user | colorHash: true }">{{ item.user || 'Unbekannt' }}</ion-label>
           </ion-chip>
           <ion-label class="ion-text-wrap">{{ item.text }}</ion-label>
-          <ion-chip class="likes" outline="true" (click)="like(i)">
-            <ion-label>{{ item.likes }}</ion-label>
-            <ion-icon *ngIf="item.likes" name="heart" color="danger"></ion-icon>
-            <ion-icon *ngIf="!item.likes" name="heart-outline" color="danger"></ion-icon>
+          <ion-chip class="likes" outline="true" (click)="toggleLike(i)" [title]="item.likes">
+            <ion-label>{{ item.likes.length }}</ion-label>
+            <ion-icon *ngIf="item.likes.includes(username)" name="heart" color="danger"></ion-icon>
+            <ion-icon *ngIf="!item.likes.includes(username)" name="heart-outline" color="danger"></ion-icon>
           </ion-chip>
         </ion-item>
         <ion-item-options side="end">

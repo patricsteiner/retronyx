@@ -36,6 +36,11 @@ export class BoardPage implements OnInit, OnDestroy {
     this.userService.username$.pipe(takeUntil(this.destroy$)).subscribe((username) => (this.username = username));
   }
 
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
   updateCard(boardId: string, cardIndex: number, card: RetroCard) {
     this.retroBoardService.updateCard(boardId, cardIndex, card);
   }
@@ -124,10 +129,5 @@ export class BoardPage implements OnInit, OnDestroy {
 
   async login() {
     await this.userService.login(this.username);
-  }
-
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
   }
 }

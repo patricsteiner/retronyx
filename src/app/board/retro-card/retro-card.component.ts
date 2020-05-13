@@ -1,13 +1,15 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { RetroCard, RetroCardItem } from '../model';
 import { UserService } from '../../user.service';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-retro-card',
   templateUrl: './retro-card.component.html',
   styleUrls: ['./retro-card.component.scss'],
 })
-export class RetroCardComponent {
+export class RetroCardComponent implements OnInit, OnDestroy {
   @Input()
   items: RetroCardItem[];
 
@@ -19,15 +21,41 @@ export class RetroCardComponent {
 
   itemText: string;
 
+  username: string;
+
+  destroy$ = new Subject();
+
   constructor(private userService: UserService) {}
+
+  ngOnInit() {
+    this.userService.username$.pipe(takeUntil(this.destroy$)).subscribe((username) => {
+      this.username = username;
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  toggleLike(index: number) {
+    if (this.retroCard.items[index].likes.includes(this.username)) {
+      this.unlike(index);
+    } else {
+      this.like(index);
+    }
+  }
 
   like(index: number) {
     const newItems = [...this.retroCard.items];
-    if (newItems[index].likes) {
-      newItems[index].likes++;
-    } else {
-      newItems[index].likes = 1;
-    }
+    newItems[index].likes = [...newItems[index].likes, this.username];
+    const newCard = { ...this.retroCard, items: newItems };
+    this.cardUpdated.emit(newCard);
+  }
+
+  unlike(index: number) {
+    const newItems = [...this.retroCard.items];
+    newItems[index].likes = newItems[index].likes.filter((u) => u !== this.username);
     const newCard = { ...this.retroCard, items: newItems };
     this.cardUpdated.emit(newCard);
   }
@@ -49,9 +77,9 @@ export class RetroCardComponent {
     this.cardUpdated.emit(newCard);
   }
 
-  async submit() {
+  submit() {
     if (this.itemText) {
-      this.addItem({ text: this.itemText, user: await this.userService.currentUser() });
+      this.addItem({ text: this.itemText, user: this.username, likes: [] });
       this.itemText = '';
     }
   }

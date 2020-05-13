@@ -22,6 +22,6 @@ export interface RetroCard {
 
 export interface RetroCardItem {
   text: string;
-  likes?: number;
+  likes: string[];
   user?: string;
 }
