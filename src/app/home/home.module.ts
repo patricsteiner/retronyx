@@ -6,11 +6,11 @@ import { HomePage } from './home.page';
 
 import { HomePageRoutingModule } from './home-routing.module';
 import { RetroCardComponent } from './retro-card/retro-card.component';
-import { StringToColorPipe } from './string-to-color.pipe';
+import { ColorHashPipe } from './color-hash.pipe';
 
 @NgModule({
   imports: [CommonModule, FormsModule, IonicModule, HomePageRoutingModule],
-  declarations: [HomePage, RetroCardComponent, StringToColorPipe],
-  exports: [StringToColorPipe],
+  declarations: [HomePage, RetroCardComponent, ColorHashPipe],
+  exports: [ColorHashPipe],
 })
 export class HomePageModule {}
