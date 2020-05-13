@@ -23,7 +23,11 @@ export class ColorHashPipe implements PipeTransform {
     return '00000'.substring(0, 6 - c.length) + c;
   }
 
-  private static contrast(hexcolor) {
-    return parseInt(hexcolor, 16) > 0xffffff / 2 ? '000000' : 'ffffff';
+  private static contrast(hex) {
+    const r = parseInt(hex.substr(1, 2), 16),
+      g = parseInt(hex.substr(3, 2), 16),
+      b = parseInt(hex.substr(5, 2), 16),
+      yiq = (r * 299 + g * 587 + b * 114) / 1000;
+    return yiq >= 128 ? '000000' : 'ffffff';
   }
 }
