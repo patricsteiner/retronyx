@@ -18,6 +18,10 @@ ion-card {
   text-align: center;
 }
 
-ion-chip {
+.user {
   opacity: 0.5;
+}
+
+.likes {
+  transform: scale(0.7);
 }
