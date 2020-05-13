@@ -1,6 +1,8 @@
+import Timestamp = firebase.firestore.Timestamp;
+
 export class RetroBoard {
   readonly id: string;
-  readonly createdAt: Date;
+  readonly createdAt: Date | Timestamp;
   readonly title: string;
   readonly cards: RetroCard[] = [
     { emoji: '😃', items: [] },

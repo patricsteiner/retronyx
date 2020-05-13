@@ -7,7 +7,9 @@
       <ion-item-sliding *ngFor="let item of retroCard.items; let i = index">
         <ion-item>
           <ion-chip class="user" [ngStyle]="{ background: item.user | colorHash }">
-            <ion-label [ngStyle]="{ color: item.user | colorHash: true }">{{ item.user || 'Unbekannt' }}</ion-label>
+            <ion-label [ngStyle]="{ color: item.user | colorHash: true }" title="{{ item.user || 'Unbekannt' }}">{{
+              item.user || 'Unbekannt'
+            }}</ion-label>
           </ion-chip>
           <ion-label class="ion-text-wrap">{{ item.text }}</ion-label>
           <ion-chip class="likes" outline="true" (click)="toggleLike(i)" [title]="item.likes">
@@ -28,8 +30,8 @@
           maxlength="200"
           minlength="2"
         ></ion-input>
-        <ion-fab-button slot="end" color="primary" size="small" [disabled]="!itemText" (click)="submit()">
-          <ion-icon name="add-outline"></ion-icon>
+        <ion-fab-button id="submit" slot="end" color="primary" size="small" [disabled]="!itemText" (click)="submit()">
+          <ion-icon name="add"></ion-icon>
         </ion-fab-button>
       </ion-item>
     </ion-list>

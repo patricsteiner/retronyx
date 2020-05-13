@@ -4,16 +4,18 @@ import { RetroBoard, RetroCard } from './model';
 import { first, map, shareReplay, tap } from 'rxjs/operators';
 import { AngularFirestore } from '@angular/fire/firestore';
 
+const BOARDS_COLLECTION_NAME = 'boards';
+
 @Injectable({
   providedIn: 'root',
 })
 export class RetroBoardService {
-  private readonly boardsCollection = this.firestore.collection<RetroBoard>('boards');
+  private readonly boardsCollection = this.firestore.collection<RetroBoard>(BOARDS_COLLECTION_NAME);
 
   constructor(private firestore: AngularFirestore) {}
 
   public retroBoards$: Observable<RetroBoard[]> = this.firestore
-    .collection<RetroBoard>('boards')
+    .collection<RetroBoard>(BOARDS_COLLECTION_NAME, (ref) => ref.orderBy('createdAt', 'desc'))
     .valueChanges({ idField: 'id' })
     .pipe(
       tap(() => console.log('READ FROM DB')),

@@ -11,7 +11,7 @@ ion-card {
   position: absolute;
   pointer-events: none;
   overflow: hidden;
-  z-index: 100;
+  z-index: 1;
   opacity: 0.05;
   font-size: 1500%;
   width: 100%;
@@ -19,9 +19,13 @@ ion-card {
 }
 
 .user {
-  opacity: 0.5;
+  opacity: 0.8;
 }
 
 .likes {
   transform: scale(0.7);
+}
+
+#submit {
+  transform: scale(0.8);
 }

@@ -11,9 +11,9 @@
         (ionChange)="navigateToBoard($event.detail.value)"
         [value]="(selectedBoard$ | async)?.id"
       >
-        <ion-select-option *ngFor="let board of retroBoards$ | async" [value]="board.id">{{
-          board.title
-        }}</ion-select-option>
+        <ion-select-option *ngFor="let board of retroBoards$ | async" [value]="board.id">
+          {{ board.title }}
+        </ion-select-option>
       </ion-select>
     </ion-buttons>
 

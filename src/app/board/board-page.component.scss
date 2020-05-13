@@ -16,6 +16,11 @@
   }
 }
 
-::ng-deep .alert-sub-title {
-  color: red !important;
+::ng-deep {
+  .alert-sub-title {
+    color: red !important;
+  }
+  .alert-wrapper {
+    max-width: 500px !important;
+  }
 }

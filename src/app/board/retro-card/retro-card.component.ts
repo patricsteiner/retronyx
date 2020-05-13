@@ -63,7 +63,9 @@ export class RetroCardComponent implements OnInit, OnDestroy {
   private addItem(item: RetroCardItem) {
     const index = this.retroCard.items.findIndex((i) => i.text === item.text);
     if (index > -1) {
-      this.like(index);
+      if (!this.retroCard.items[index].likes.includes(this.username)) {
+        this.like(index);
+      }
     } else {
       const newItems = [...this.retroCard.items, item];
       const newCard = { ...this.retroCard, items: newItems };
