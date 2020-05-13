@@ -4,7 +4,7 @@ import { RetroBoard, RetroCard } from './model';
 import { RetroBoardService } from './retro-board.service';
 import { AlertController, NavController } from '@ionic/angular';
 import { ActivatedRoute } from '@angular/router';
-import { filter, map, switchMap, takeUntil } from 'rxjs/operators';
+import { filter, map, switchMap, take, takeUntil } from 'rxjs/operators';
 import { UserService } from '../user.service';
 
 @Component({
@@ -12,16 +12,15 @@ import { UserService } from '../user.service';
   styleUrls: ['board-page.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class BoardPage implements OnInit, OnDestroy {
+export class BoardPage implements OnInit {
   selectedBoard$: Observable<RetroBoard> = this.route.paramMap.pipe(
     map((params) => params.get('id')),
     filter((id) => !!id),
     switchMap((id) => this.retroBoards$.pipe(map((boards) => boards.find((board) => board.id === id))))
   );
   retroBoards$: Observable<RetroBoard[]> = this.retroBoardService.retroBoards$;
-  username: string;
+  username$ = this.userService.username$;
   cardIndexes$ = this.selectedBoard$.pipe(map((board) => board.cards.map((card, i) => i)));
-  private destroy$ = new Subject();
 
   constructor(
     private retroBoardService: RetroBoardService,
@@ -29,19 +28,12 @@ export class BoardPage implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private navCtrl: NavController,
     private userService: UserService
-  ) {
-    this.userService.username$.pipe(takeUntil(this.destroy$)).subscribe((username) => (this.username = username));
-  }
+  ) {}
 
   async ngOnInit() {
     if (!(await this.userService.currentUser())) {
       this.showLoginPopup();
     }
-  }
-
-  ngOnDestroy() {
-    this.destroy$.next();
-    this.destroy$.complete();
   }
 
   updateCard(boardId: string, cardIndex: number, card: RetroCard) {
@@ -93,6 +85,7 @@ export class BoardPage implements OnInit, OnDestroy {
   }
 
   async showLoginPopup() {
+    const username = await this.username$.pipe(take(1)).toPromise();
     const alertDialog = await this.alertController.create({
       header: 'Wie ist dein Name?',
       subHeader: '',
@@ -100,6 +93,7 @@ export class BoardPage implements OnInit, OnDestroy {
         {
           name: 'name',
           type: 'text',
+          value: username,
           placeholder: 'Bitte Namen eingeben...',
         },
       ],
@@ -128,9 +122,5 @@ export class BoardPage implements OnInit, OnDestroy {
       this.retroBoardService.deleteBoard(id);
       this.navCtrl.navigateRoot('/board');
     }
-  }
-
-  async login() {
-    await this.userService.login(this.username);
   }
 }

@@ -15,8 +15,13 @@
           <ion-icon *ngIf="item.flag" name="flag" color="danger"></ion-icon>
           <ion-chip class="likes" outline="true" (click)="toggleLike(i)" [title]="item.likes">
             <ion-label>{{ item.likes.length }}</ion-label>
-            <ion-icon *ngIf="item.likes.includes(username)" name="heart" color="danger"></ion-icon>
-            <ion-icon *ngIf="!item.likes.includes(username)" name="heart-outline" color="danger"></ion-icon>
+            <ng-container *ngIf="item.likes.includes(username); then heart; else heartOutline"></ng-container>
+            <ng-template #heart>
+              <ion-icon name="heart" color="danger"></ion-icon>
+            </ng-template>
+            <ng-template #heartOutline>
+              <ion-icon name="heart-outline" color="danger"></ion-icon>
+            </ng-template>
           </ion-chip>
         </ion-item>
         <ion-item-options side="start">
