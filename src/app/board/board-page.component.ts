@@ -92,7 +92,7 @@ export class BoardPage implements OnInit, OnDestroy {
         {
           name: 'name',
           type: 'text',
-          placeholder: 'Bitte Name eingeben...',
+          placeholder: 'Bitte Namen eingeben...',
         },
       ],
       buttons: [
