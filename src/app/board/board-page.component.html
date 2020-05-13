@@ -49,8 +49,11 @@
 <ion-content [fullscreen]="true">
   <ion-grid *ngIf="selectedBoard$ | async as selectedBoard; else noBoardSelected">
     <ion-row>
-      <ion-col size="12" size-md="6" *ngFor="let card of selectedBoard.cards; let idx = index">
-        <app-retro-card [retroCard]="card" (cardUpdated)="updateCard(selectedBoard.id, idx, $event)"></app-retro-card>
+      <ion-col size="12" size-md="6" *ngFor="let i of cardIndexes$ | async">
+        <app-retro-card
+          [retroCard]="selectedBoard.cards[i]"
+          (cardUpdated)="updateCard(selectedBoard.id, i, $event)"
+        ></app-retro-card>
       </ion-col>
     </ion-row>
   </ion-grid>

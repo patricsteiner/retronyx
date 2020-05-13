@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { RetroBoard, RetroCard } from './model';
 import { RetroBoardService } from './retro-board.service';
@@ -10,6 +10,7 @@ import { UserService } from '../user.service';
 @Component({
   templateUrl: 'board-page.component.html',
   styleUrls: ['board-page.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BoardPage implements OnInit, OnDestroy {
   selectedBoard$: Observable<RetroBoard> = this.route.paramMap.pipe(
@@ -19,6 +20,7 @@ export class BoardPage implements OnInit, OnDestroy {
   );
   retroBoards$: Observable<RetroBoard[]> = this.retroBoardService.retroBoards$;
   username: string;
+  cardIndexes$ = this.selectedBoard$.pipe(map((board) => board.cards.map((card, i) => i)));
   private destroy$ = new Subject();
 
   constructor(
@@ -27,13 +29,14 @@ export class BoardPage implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private navCtrl: NavController,
     private userService: UserService
-  ) {}
+  ) {
+    this.userService.username$.pipe(takeUntil(this.destroy$)).subscribe((username) => (this.username = username));
+  }
 
   async ngOnInit() {
     if (!(await this.userService.currentUser())) {
       this.showLoginPopup();
     }
-    this.userService.username$.pipe(takeUntil(this.destroy$)).subscribe((username) => (this.username = username));
   }
 
   ngOnDestroy() {

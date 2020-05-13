@@ -1,4 +1,14 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  Output,
+  SimpleChanges,
+} from '@angular/core';
 import { RetroCard, RetroCardItem } from '../model';
 import { UserService } from '../../user.service';
 import { Subject } from 'rxjs';
@@ -8,11 +18,9 @@ import { takeUntil } from 'rxjs/operators';
   selector: 'app-retro-card',
   templateUrl: './retro-card.component.html',
   styleUrls: ['./retro-card.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RetroCardComponent implements OnInit, OnDestroy {
-  @Input()
-  items: RetroCardItem[];
-
   @Input()
   retroCard: RetroCard;
 
@@ -33,7 +41,7 @@ export class RetroCardComponent implements OnInit, OnDestroy {
     });
   }
 
-  ngOnDestroy(): void {
+  ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
   }
