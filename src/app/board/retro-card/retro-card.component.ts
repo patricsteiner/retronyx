@@ -73,7 +73,7 @@ export class RetroCardComponent implements OnInit, OnDestroy {
     }
   }
 
-  private deleteItem(item: RetroCardItem) {
+  deleteItem(item: RetroCardItem) {
     const newItems = this.retroCard.items.filter((i) => i.text !== item.text);
     const newCard = { ...this.retroCard, items: newItems };
     this.cardUpdated.emit(newCard);
@@ -84,5 +84,12 @@ export class RetroCardComponent implements OnInit, OnDestroy {
       this.addItem({ text: this.itemText, user: this.username, likes: [] });
       this.itemText = '';
     }
+  }
+
+  toggleFlag(index: number) {
+    const newItems = [...this.retroCard.items];
+    newItems[index].flag = !newItems[index].flag;
+    const newCard = { ...this.retroCard, items: newItems };
+    this.cardUpdated.emit(newCard);
   }
 }

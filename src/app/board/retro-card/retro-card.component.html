@@ -12,14 +12,23 @@
             }}</ion-label>
           </ion-chip>
           <ion-label class="ion-text-wrap">{{ item.text }}</ion-label>
+          <ion-icon *ngIf="item.flag" name="flag" color="danger"></ion-icon>
           <ion-chip class="likes" outline="true" (click)="toggleLike(i)" [title]="item.likes">
             <ion-label>{{ item.likes.length }}</ion-label>
             <ion-icon *ngIf="item.likes.includes(username)" name="heart" color="danger"></ion-icon>
             <ion-icon *ngIf="!item.likes.includes(username)" name="heart-outline" color="danger"></ion-icon>
           </ion-chip>
         </ion-item>
+        <ion-item-options side="start">
+          <ion-item-option color="light" (click)="toggleFlag(i)">
+            <ion-icon *ngIf="item.flag" slot="icon-only" name="flag-outline"></ion-icon>
+            <ion-icon *ngIf="!item.flag" slot="icon-only" name="flag"></ion-icon>
+          </ion-item-option>
+        </ion-item-options>
         <ion-item-options side="end">
-          <ion-item-option (click)="deleteItem(item)" color="danger">Löschen</ion-item-option>
+          <ion-item-option color="danger" (click)="deleteItem(item)">
+            <ion-icon slot="icon-only" name="trash"></ion-icon>
+          </ion-item-option>
         </ion-item-options>
       </ion-item-sliding>
       <ion-item>

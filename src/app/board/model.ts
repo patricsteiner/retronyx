@@ -1,3 +1,4 @@
+// @ts-ignore
 import Timestamp = firebase.firestore.Timestamp;
 
 export class RetroBoard {
@@ -26,4 +27,5 @@ export interface RetroCardItem {
   text: string;
   likes: string[];
   user?: string;
+  flag?: boolean;
 }
