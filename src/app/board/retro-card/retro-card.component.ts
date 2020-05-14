@@ -59,10 +59,12 @@ export class RetroCardComponent implements OnInit, OnDestroy {
   }
 
   like(itemIdx: number) {
+    this.retroCard.items[itemIdx].likes.push(this.username); // TODO refactor, this is just here so it visually updates immediately.
     this.retroBoardService.likeItem(this.boardId, this.cardIdx, itemIdx, this.username);
   }
 
   unlike(itemIdx: number) {
+    this.retroCard.items[itemIdx].likes = this.retroCard.items[itemIdx].likes.filter((n) => n !== this.username); // TODO refactor, this is just here so it visually updates immediately.
     this.retroBoardService.unlikeItem(this.boardId, this.cardIdx, itemIdx, this.username);
   }
 
@@ -73,11 +75,13 @@ export class RetroCardComponent implements OnInit, OnDestroy {
         this.like(index);
       }
     } else {
+      this.retroCard.items.push(item); // TODO refactor, this is just here so it visually updates immediately.
       this.retroBoardService.addItem(this.boardId, this.cardIdx, item);
     }
   }
 
   deleteItem(itemIdx: number) {
+    this.retroCard.items.splice(itemIdx, 1); // TODO refactor, this is just here so it visually updates immediately.
     this.retroBoardService.deleteItem(this.boardId, this.cardIdx, itemIdx);
   }
 
@@ -90,8 +94,10 @@ export class RetroCardComponent implements OnInit, OnDestroy {
 
   toggleFlag(itemIdx: number) {
     if (this.retroCard.items[itemIdx].flag) {
+      this.retroCard.items[itemIdx].flag = false; // TODO refactor, this is just here so it visually updates immediately.
       this.retroBoardService.unflagItem(this.boardId, this.cardIdx, itemIdx);
     } else {
+      this.retroCard.items[itemIdx].flag = true; // TODO refactor, this is just here so it visually updates immediately.
       this.retroBoardService.flagItem(this.boardId, this.cardIdx, itemIdx);
     }
   }
