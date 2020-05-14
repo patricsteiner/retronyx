@@ -45,7 +45,8 @@
       <ion-col size="12" size-md="6" *ngFor="let i of cardIndexes$ | async">
         <app-retro-card
           [retroCard]="selectedBoard.cards[i]"
-          (cardUpdated)="updateCard(selectedBoard.id, i, $event)"
+          [cardIdx]="i"
+          [boardId]="selectedBoard.id"
         ></app-retro-card>
       </ion-col>
     </ion-row>

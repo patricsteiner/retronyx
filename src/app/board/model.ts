@@ -28,4 +28,5 @@ export interface RetroCardItem {
   likes: string[];
   user?: string;
   flag?: boolean;
+  deleted?: boolean;
 }
