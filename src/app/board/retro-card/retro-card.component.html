@@ -2,6 +2,9 @@
   <div class="background">
     {{ retroCard.emoji }}
   </div>
+  <ion-card-header *ngIf="retroCard.title">
+    <ion-card-title>{{ retroCard.title }}</ion-card-title>
+  </ion-card-header>
   <ion-card-content>
     <ion-list>
       <ion-item-sliding *ngFor="let item of retroCard.items; let itemIdx = index" #slidingItem>
