@@ -3,7 +3,7 @@
     <ion-buttons slot="start">
       <img src="assets/icon/onyx.png" id="logo" alt="onyx logo" />
       <ion-title>
-        Onyx Retro
+        Retronyx
       </ion-title>
       <ion-select
         placeholder="Board auswählen..."
@@ -39,7 +39,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
+<ion-content [fullscreen]="false">
   <ion-grid *ngIf="selectedBoard$ | async as selectedBoard; else noBoardSelected">
     <ion-row>
       <ion-col size="12" size-md="6" *ngFor="let i of cardIndexes$ | async">
@@ -52,6 +52,20 @@
     </ion-row>
   </ion-grid>
 </ion-content>
+
+<ion-footer [translucent]="true">
+  <ion-toolbar color="warning">
+    <ion-title>
+      <ion-icon name="warning"></ion-icon>
+      ALPHA Release
+      <div style="font-size: 70%;" class="ion-text-wrap">
+        Dies ist noch keine fix fertige App. Wenn Mehrere Personen "fast-gleichzeitig" Einträge
+        hinzufügen/löschen/liken, dann kann es passieren, dass nicht alle Änderungen korrekt übernommen werden. Wir
+        arbeiten daran 😉
+      </div>
+    </ion-title>
+  </ion-toolbar>
+</ion-footer>
 
 <ng-template #noBoardSelected>
   <div id="noBoardSelected">
