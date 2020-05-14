@@ -13,6 +13,7 @@ import { AngularFireModule } from '@angular/fire';
 import { environment } from '../environments/environment';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { ServiceWorkerModule } from '@angular/service-worker';
+import { AngularFireFunctionsModule, FUNCTIONS_REGION, REGION } from '@angular/fire/functions';
 
 @NgModule({
   declarations: [AppComponent],
@@ -23,6 +24,7 @@ import { ServiceWorkerModule } from '@angular/service-worker';
     AngularFireModule.initializeApp(environment.firebase),
     IonicStorageModule.forRoot(),
     AngularFirestoreModule,
+    AngularFireFunctionsModule,
     AppRoutingModule,
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
   ],
@@ -33,6 +35,7 @@ import { ServiceWorkerModule } from '@angular/service-worker';
       provide: RouteReuseStrategy,
       useClass: IonicRouteStrategy,
     },
+    { provide: REGION, useValue: 'europe-west1' },
   ],
   bootstrap: [AppComponent],
 })

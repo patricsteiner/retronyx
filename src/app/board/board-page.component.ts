@@ -1,10 +1,10 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
-import { Observable, Subject } from 'rxjs';
-import { RetroBoard, RetroCard } from './model';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
+import { RetroBoard } from './model';
 import { RetroBoardService } from './retro-board.service';
 import { AlertController, NavController } from '@ionic/angular';
 import { ActivatedRoute } from '@angular/router';
-import { filter, map, switchMap, take, takeUntil } from 'rxjs/operators';
+import { filter, map, switchMap, take } from 'rxjs/operators';
 import { UserService } from '../user.service';
 
 @Component({
@@ -34,10 +34,6 @@ export class BoardPage implements OnInit {
     if (!(await this.userService.currentUser())) {
       this.showLoginPopup();
     }
-  }
-
-  updateCard(boardId: string, cardIndex: number, card: RetroCard) {
-    this.retroBoardService.updateCard(boardId, cardIndex, card);
   }
 
   navigateToBoard(id: string) {

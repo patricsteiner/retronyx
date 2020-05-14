@@ -5,8 +5,13 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class ColorHashPipe implements PipeTransform {
   transform(value: string, contrast?: boolean): string {
+    if (!value) {
+      return contrast ? '#EEEEEE' : '#AAAAAA';
+    }
     let hex = ColorHashPipe.intToHex(ColorHashPipe.hashCode(value));
-    if (contrast) hex = ColorHashPipe.contrast(hex);
+    if (contrast) {
+      hex = ColorHashPipe.contrast(hex);
+    }
     return '#' + hex;
   }
 

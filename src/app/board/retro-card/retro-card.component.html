@@ -2,10 +2,13 @@
   <div class="background">
     {{ retroCard.emoji }}
   </div>
+  <ion-card-header *ngIf="retroCard.title">
+    <ion-card-title>{{ retroCard.title }}</ion-card-title>
+  </ion-card-header>
   <ion-card-content>
     <ion-list>
-      <ion-item-sliding *ngFor="let item of retroCard.items; let i = index">
-        <ion-item>
+      <ion-item-sliding *ngFor="let item of retroCard.items; let itemIdx = index" #slidingItem>
+        <ion-item *ngIf="!item.deleted">
           <ion-chip class="user" [ngStyle]="{ background: item.user | colorHash }">
             <ion-label [ngStyle]="{ color: item.user | colorHash: true }" title="{{ item.user || 'Unbekannt' }}">{{
               item.user || 'Unbekannt'
@@ -13,7 +16,7 @@
           </ion-chip>
           <ion-label class="ion-text-wrap">{{ item.text }}</ion-label>
           <ion-icon *ngIf="item.flag" name="flag" color="danger"></ion-icon>
-          <ion-chip class="likes" outline="true" (click)="toggleLike(i)" [title]="item.likes">
+          <ion-chip class="likes" outline="true" (click)="toggleLike(itemIdx)" [title]="item.likes">
             <ion-label>{{ item.likes.length }}</ion-label>
             <ng-container *ngIf="item.likes.includes(username); then heart; else heartOutline"></ng-container>
             <ng-template #heart>
@@ -25,13 +28,13 @@
           </ion-chip>
         </ion-item>
         <ion-item-options side="start">
-          <ion-item-option color="light" (click)="toggleFlag(i)">
+          <ion-item-option color="light" (click)="toggleFlag(itemIdx); slidingItem.close()">
             <ion-icon *ngIf="item.flag" slot="icon-only" name="flag-outline"></ion-icon>
             <ion-icon *ngIf="!item.flag" slot="icon-only" name="flag"></ion-icon>
           </ion-item-option>
         </ion-item-options>
         <ion-item-options side="end">
-          <ion-item-option color="danger" (click)="deleteItem(item)">
+          <ion-item-option color="danger" (click)="deleteItem(itemIdx)">
             <ion-icon slot="icon-only" name="trash"></ion-icon>
           </ion-item-option>
         </ion-item-options>

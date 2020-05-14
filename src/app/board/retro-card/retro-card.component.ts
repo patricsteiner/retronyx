@@ -13,6 +13,7 @@ import { RetroCard, RetroCardItem } from '../model';
 import { UserService } from '../../user.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { RetroBoardService } from '../retro-board.service';
 
 @Component({
   selector: 'app-retro-card',
@@ -22,10 +23,13 @@ import { takeUntil } from 'rxjs/operators';
 })
 export class RetroCardComponent implements OnInit, OnDestroy {
   @Input()
-  retroCard: RetroCard;
+  boardId: string; // TODO fix, this is ugly
 
-  @Output()
-  cardUpdated = new EventEmitter<RetroCard>();
+  @Input()
+  cardIdx: number; // TODO fix, this is ugly
+
+  @Input()
+  retroCard: RetroCard;
 
   itemText: string;
 
@@ -33,7 +37,7 @@ export class RetroCardComponent implements OnInit, OnDestroy {
 
   destroy$ = new Subject();
 
-  constructor(private userService: UserService) {}
+  constructor(private userService: UserService, private retroBoardService: RetroBoardService) {}
 
   ngOnInit() {
     this.userService.username$.pipe(takeUntil(this.destroy$)).subscribe((username) => {
@@ -46,26 +50,22 @@ export class RetroCardComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  toggleLike(index: number) {
-    if (this.retroCard.items[index].likes.includes(this.username)) {
-      this.unlike(index);
+  toggleLike(itemIdx: number) {
+    if (this.retroCard.items[itemIdx].likes.includes(this.username)) {
+      this.unlike(itemIdx);
     } else {
-      this.like(index);
+      this.like(itemIdx);
     }
   }
 
-  like(index: number) {
-    const newItems = [...this.retroCard.items];
-    newItems[index].likes = [...newItems[index].likes, this.username];
-    const newCard = { ...this.retroCard, items: newItems };
-    this.cardUpdated.emit(newCard);
+  like(itemIdx: number) {
+    this.retroCard.items[itemIdx].likes.push(this.username); // TODO refactor, this is just here so it visually updates immediately.
+    this.retroBoardService.likeItem(this.boardId, this.cardIdx, itemIdx, this.username);
   }
 
-  unlike(index: number) {
-    const newItems = [...this.retroCard.items];
-    newItems[index].likes = newItems[index].likes.filter((u) => u !== this.username);
-    const newCard = { ...this.retroCard, items: newItems };
-    this.cardUpdated.emit(newCard);
+  unlike(itemIdx: number) {
+    this.retroCard.items[itemIdx].likes = this.retroCard.items[itemIdx].likes.filter((n) => n !== this.username); // TODO refactor, this is just here so it visually updates immediately.
+    this.retroBoardService.unlikeItem(this.boardId, this.cardIdx, itemIdx, this.username);
   }
 
   private addItem(item: RetroCardItem) {
@@ -75,16 +75,14 @@ export class RetroCardComponent implements OnInit, OnDestroy {
         this.like(index);
       }
     } else {
-      const newItems = [...this.retroCard.items, item];
-      const newCard = { ...this.retroCard, items: newItems };
-      this.cardUpdated.emit(newCard);
+      this.retroCard.items.push(item); // TODO refactor, this is just here so it visually updates immediately.
+      this.retroBoardService.addItem(this.boardId, this.cardIdx, item);
     }
   }
 
-  deleteItem(item: RetroCardItem) {
-    const newItems = this.retroCard.items.filter((i) => i.text !== item.text);
-    const newCard = { ...this.retroCard, items: newItems };
-    this.cardUpdated.emit(newCard);
+  deleteItem(itemIdx: number) {
+    this.retroCard.items.splice(itemIdx, 1); // TODO refactor, this is just here so it visually updates immediately.
+    this.retroBoardService.deleteItem(this.boardId, this.cardIdx, itemIdx);
   }
 
   submit() {
@@ -94,10 +92,13 @@ export class RetroCardComponent implements OnInit, OnDestroy {
     }
   }
 
-  toggleFlag(index: number) {
-    const newItems = [...this.retroCard.items];
-    newItems[index].flag = !newItems[index].flag;
-    const newCard = { ...this.retroCard, items: newItems };
-    this.cardUpdated.emit(newCard);
+  toggleFlag(itemIdx: number) {
+    if (this.retroCard.items[itemIdx].flag) {
+      this.retroCard.items[itemIdx].flag = false; // TODO refactor, this is just here so it visually updates immediately.
+      this.retroBoardService.unflagItem(this.boardId, this.cardIdx, itemIdx);
+    } else {
+      this.retroCard.items[itemIdx].flag = true; // TODO refactor, this is just here so it visually updates immediately.
+      this.retroBoardService.flagItem(this.boardId, this.cardIdx, itemIdx);
+    }
   }
 }
