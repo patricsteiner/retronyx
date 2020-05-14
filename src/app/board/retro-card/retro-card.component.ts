@@ -69,10 +69,10 @@ export class RetroCardComponent implements OnInit, OnDestroy {
   }
 
   private addItem(item: RetroCardItem) {
-    const index = this.retroCard.items.findIndex((i) => i.text === item.text);
-    if (index > -1) {
-      if (!this.retroCard.items[index].likes.includes(this.username)) {
-        this.like(index);
+    const duplicateIdx = this.retroCard.items.findIndex((i) => i.text === item.text && !i.deleted);
+    if (duplicateIdx > -1) {
+      if (!this.retroCard.items[duplicateIdx].likes.includes(this.username)) {
+        this.like(duplicateIdx);
       }
     } else {
       this.retroCard.items.push(item); // TODO refactor, this is just here so it visually updates immediately.

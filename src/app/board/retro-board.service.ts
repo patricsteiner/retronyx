@@ -54,21 +54,6 @@ export class RetroBoardService {
     unflagItemFunction({ boardId, cardIdx, itemIdx });
   }
 
-  /**
-   * @deprecated
-   * TODO: remove
-   */
-  async updateCard(boardId: string, cardIndex: number, newCard: RetroCard) {
-    const newBoard = await this.retroBoards$
-      .pipe(
-        first(),
-        map((boards) => boards.find((board) => board.id === boardId))
-      )
-      .toPromise();
-    newBoard.cards[cardIndex] = newCard;
-    this.boardsCollection.doc(newBoard.id).update(newBoard);
-  }
-
   async createNewBoard(title: string) {
     title = title.substring(0, 50);
     const board = new RetroBoard(title);
