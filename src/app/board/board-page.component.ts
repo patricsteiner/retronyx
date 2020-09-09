@@ -13,6 +13,7 @@ import { UserService } from '../user.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BoardPage implements OnInit {
+  showAlphaInfo = true;
   selectedBoard$: Observable<RetroBoard> = this.route.paramMap.pipe(
     map((params) => params.get('id')),
     filter((id) => !!id),

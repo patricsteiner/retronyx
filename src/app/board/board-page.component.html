@@ -53,7 +53,7 @@
   </ion-grid>
 </ion-content>
 
-<ion-footer [translucent]="true">
+<ion-footer *ngIf="showAlphaInfo" [translucent]="true">
   <ion-toolbar color="warning">
     <ion-title>
       <ion-icon size="small" name="warning" color="danger"></ion-icon>
@@ -61,6 +61,15 @@
       <div style="font-size: 70%;" class="ion-text-wrap">
         Diese App ist noch in Entwicklung, darf aber auf eigene Gefahr gerne bereits benutzt werden. Feedback bitte an
         <a href="mailto:ye.zhao@mobi.ch">Ye Zhao</a> und <a href="mailto:patric.steiner@mobi.ch">Patric Steiner</a> ✌️😃
+        <ion-button
+          (click)="showAlphaInfo = false"
+          size="small"
+          shape="round"
+          color="dark"
+          style="position: absolute; right: 16px; top: 4px;"
+        >
+          <ion-icon slot="icon-only" name="close"></ion-icon>
+        </ion-button>
       </div>
     </ion-title>
   </ion-toolbar>
