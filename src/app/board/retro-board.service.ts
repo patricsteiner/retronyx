@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { RetroBoard, RetroCard, RetroCardItem } from './model';
-import { first, map, shareReplay, tap } from 'rxjs/operators';
+import { RetroBoard, RetroCardItem } from './model';
+import { first, shareReplay, tap } from 'rxjs/operators';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AngularFireFunctions } from '@angular/fire/functions';
 
@@ -52,6 +52,13 @@ export class RetroBoardService {
   unflagItem(boardId: string, cardIdx: number, itemIdx: number) {
     const unflagItemFunction = this.functions.httpsCallable('unflagItem');
     unflagItemFunction({ boardId, cardIdx, itemIdx });
+  }
+
+  updateCardTitle(boardId: string, cardIdx: number, title: string, emoji: string) {
+    title = title.substring(0, 50);
+    emoji = emoji.substring(0, 4);
+    const updateCardTitleFunction = this.functions.httpsCallable('updateCardTitle');
+    updateCardTitleFunction({ boardId, cardIdx, title, emoji });
   }
 
   async createNewBoard(title: string) {

@@ -3,7 +3,18 @@
     {{ retroCard.emoji }}
   </div>
   <ion-card-header *ngIf="retroCard.title">
-    <ion-card-title>{{ retroCard.title }}</ion-card-title>
+    <ion-card-title
+      >{{ retroCard.title }}
+      <ion-button
+        (click)="showEditCardPopup(retroCard.title, retroCard.emoji)"
+        size="small"
+        shape="round"
+        fill="none"
+        style="float: right;"
+      >
+        <ion-icon color="medium" name="ellipsis-horizontal"></ion-icon>
+      </ion-button>
+    </ion-card-title>
   </ion-card-header>
   <ion-card-content>
     <ion-list>

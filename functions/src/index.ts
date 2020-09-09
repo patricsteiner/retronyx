@@ -6,6 +6,7 @@ import { likeItemFunction } from './callables/likeItem.function';
 import { unlikeItemFunction } from './callables/unlikeItem.function';
 import { flagItemFunction } from './callables/flagItem.function';
 import { unflagItemFunction } from './callables/unflagItem.function';
+import { updateCardTitleFunction } from './callables/updateCardTitle.function';
 
 export const addItem = addItemFunction;
 export const deleteItem = deleteItemFunction;
@@ -13,3 +14,4 @@ export const likeItem = likeItemFunction;
 export const unlikeItem = unlikeItemFunction;
 export const flagItem = flagItemFunction;
 export const unflagItem = unflagItemFunction;
+export const updateCardTitle = updateCardTitleFunction;

@@ -1,19 +1,10 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  EventEmitter,
-  Input,
-  OnChanges,
-  OnDestroy,
-  OnInit,
-  Output,
-  SimpleChanges,
-} from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { RetroCard, RetroCardItem } from '../model';
 import { UserService } from '../../user.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { RetroBoardService } from '../retro-board.service';
+import { AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'app-retro-card',
@@ -37,7 +28,12 @@ export class RetroCardComponent implements OnInit, OnDestroy {
 
   destroy$ = new Subject();
 
-  constructor(private userService: UserService, private retroBoardService: RetroBoardService) {}
+  constructor(
+    private userService: UserService,
+    private retroBoardService: RetroBoardService,
+    private alertController: AlertController,
+    private changeDetectorRef: ChangeDetectorRef
+  ) {}
 
   ngOnInit() {
     this.userService.username$.pipe(takeUntil(this.destroy$)).subscribe((username) => {
@@ -100,5 +96,50 @@ export class RetroCardComponent implements OnInit, OnDestroy {
       this.retroCard.items[itemIdx].flag = true; // TODO refactor, this is just here so it visually updates immediately.
       this.retroBoardService.flagItem(this.boardId, this.cardIdx, itemIdx);
     }
+  }
+
+  updateCardTitle(title: string, emoji: string) {
+    this.retroCard.title = title; // TODO refactor, this is just here so it visually updates immediately.
+    this.retroCard.emoji = emoji.substring(0, 4); // TODO refactor, this is just here so it visually updates immediately.
+    this.changeDetectorRef.detectChanges();
+    this.retroBoardService.updateCardTitle(this.boardId, this.cardIdx, title, emoji);
+  }
+
+  async showEditCardPopup(title: string, emoji: string) {
+    const alertDialog = await this.alertController.create({
+      header: 'Karte anpassen',
+      // subHeader: error,
+      inputs: [
+        {
+          name: 'title',
+          type: 'text',
+          placeholder: 'Bitte einen Titel eingeben...',
+          value: title,
+        },
+        {
+          name: 'emoji',
+          type: 'text',
+          placeholder: 'Optional ein Emoji einfügen...',
+          value: emoji,
+        },
+      ],
+      buttons: [
+        {
+          text: 'Abbrechen',
+          role: 'cancel',
+          cssClass: 'secondary',
+        },
+        {
+          text: 'OK',
+          handler: (input) => {
+            if (!input.title || (input.title === title && input.emoji === emoji)) {
+              return false;
+            }
+            this.updateCardTitle(input.title, input.emoji);
+          },
+        },
+      ],
+    });
+    alertDialog.present();
   }
 }
