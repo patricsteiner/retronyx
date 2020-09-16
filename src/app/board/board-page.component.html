@@ -10,15 +10,16 @@
         interface="popover"
         (ionChange)="navigateToBoard($event.detail.value)"
         [value]="(selectedBoard$ | async)?.id"
+        [selectedText]="(selectedBoard$ | async)?.title"
       >
-        <ion-select-option *ngFor="let board of retroBoards$ | async" [value]="board.id">
+        <ion-select-option *ngFor="let board of publicRetroBoards$ | async" [value]="board.id">
           {{ board.title }}
         </ion-select-option>
       </ion-select>
     </ion-buttons>
 
     <ion-buttons slot="end">
-      <ion-button color="primary" fill="clear" (click)="createNewBoard()">
+      <ion-button color="primary" fill="clear" (click)="showNewBoardModal()">
         <ion-icon name="add-outline"></ion-icon>
       </ion-button>
       <ion-button
@@ -56,11 +57,30 @@
 <ion-footer *ngIf="showAlphaInfo" [translucent]="true">
   <ion-toolbar color="warning">
     <ion-title>
-      <ion-icon size="small" name="warning" color="danger"></ion-icon>
-      ALPHA Release
+      <!--      <ion-icon size="small" name="warning" color="danger"></ion-icon>-->
+      <!--      ALPHA Release-->
       <div style="font-size: 70%;" class="ion-text-wrap">
-        Diese App ist noch in Entwicklung, darf aber auf eigene Gefahr gerne bereits benutzt werden. Feedback bitte an
-        <a href="mailto:ye.zhao@mobi.ch">Ye Zhao</a> und <a href="mailto:patric.steiner@mobi.ch">Patric Steiner</a> ✌️😃
+        Diese App ist noch in Entwicklung, darf aber auf eigene Gefahr gerne bereits benutzt werden. ✌️😃
+        <a
+          class="github-button"
+          href="https://github.com/patricsteiner/retronyx"
+          data-color-scheme="no-preference: light; light: light; dark: dark;"
+          data-icon="octicon-star"
+          data-size="large"
+          data-show-count="true"
+          aria-label="Star patricsteiner/retronyx on GitHub"
+          >Star</a
+        >
+        <a
+          class="github-button"
+          href="https://github.com/patricsteiner/retronyx/issues"
+          data-color-scheme="no-preference: light; light: light; dark: dark;"
+          data-icon="octicon-issue-opened"
+          data-size="large"
+          data-show-count="true"
+          aria-label="Issue patricsteiner/retronyx on GitHub"
+          >Issue</a
+        >
         <ion-button
           (click)="showAlphaInfo = false"
           size="small"

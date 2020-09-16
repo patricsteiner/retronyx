@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { RetroBoard, RetroCardItem } from './model';
-import { first, shareReplay, tap } from 'rxjs/operators';
+import { filter, first, shareReplay, tap } from 'rxjs/operators';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AngularFireFunctions } from '@angular/fire/functions';
+import { UserService } from '../user.service';
 
 const BOARDS_COLLECTION_NAME = 'boards';
 
@@ -13,15 +14,32 @@ const BOARDS_COLLECTION_NAME = 'boards';
 export class RetroBoardService {
   private readonly boardsCollection = this.firestore.collection<RetroBoard>(BOARDS_COLLECTION_NAME);
 
-  constructor(private firestore: AngularFirestore, private functions: AngularFireFunctions) {}
+  constructor(
+    private firestore: AngularFirestore,
+    private functions: AngularFireFunctions,
+    private userService: UserService
+  ) {}
 
-  public retroBoards$: Observable<RetroBoard[]> = this.firestore
-    .collection<RetroBoard>(BOARDS_COLLECTION_NAME, (ref) => ref.orderBy('createdAt', 'desc'))
+  public publicRetroBoards$: Observable<RetroBoard[]> = this.firestore
+    .collection<RetroBoard>(BOARDS_COLLECTION_NAME, (ref) =>
+      ref.where('public', '==', true).orderBy('createdAt', 'desc')
+    )
     .valueChanges({ idField: 'id' })
     .pipe(
-      tap(() => console.log('READ FROM DB')),
+      tap(() => console.log('READ N FROM DB')),
       shareReplay({ bufferSize: 1, refCount: true })
     );
+
+  getBoard$(id: string): Observable<RetroBoard> {
+    return this.boardsCollection
+      .doc<RetroBoard>(id)
+      .valueChanges()
+      .pipe(
+        filter((value) => !!value),
+        tap((it) => (it.id = id)),
+        tap(() => console.log('READ 1 FROM DB'))
+      );
+  }
 
   // NOTE: To be able to always trust an index, we can never delete array entries! Only mark them as deleted.
   addItem(boardId: string, cardIdx: number, item: RetroCardItem) {
@@ -61,11 +79,17 @@ export class RetroBoardService {
     updateCardTitleFunction({ boardId, cardIdx, title, emoji });
   }
 
-  async createNewBoard(title: string) {
-    title = title.substring(0, 50);
-    const board = new RetroBoard(title);
-    const allBoards = await this.retroBoards$.pipe(first()).toPromise();
-    if (allBoards.map((b) => b.title).includes(title)) {
+  async createNewBoard(title: string, isPublic: boolean) {
+    title = title.substring(0, 100);
+    const user = await this.userService.currentUser();
+    const board = new RetroBoard(title, isPublic, user);
+    const allBoards = await this.publicRetroBoards$.pipe(first()).toPromise();
+    if (
+      allBoards
+        .filter((b) => b.public)
+        .map((b) => b.title)
+        .includes(title)
+    ) {
       return Promise.reject();
     }
     return this.boardsCollection.add({ ...board });

@@ -1,0 +1,33 @@
+<ion-card>
+  <ion-card-header>
+    <ion-card-title>Neues Retro Board erstellen</ion-card-title>
+  </ion-card-header>
+  <ion-card-content>
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <ion-item>
+        <ion-label position="floating">Titel</ion-label>
+        <ion-input
+          formControlName="title"
+          placeholder="Bitte Titel eingeben..."
+          (ionChange)="error = ''"
+          required
+          minlength="3"
+          maxlength="100"
+        ></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-text slot="start" class="ion-text-wrap">Öffentlich anzeigen</ion-text>
+        <ion-toggle slot="end" formControlName="public"></ion-toggle>
+      </ion-item>
+      <ion-item *ngIf="error">
+        <ion-text color="danger">{{ error }}</ion-text>
+      </ion-item>
+    </form>
+    <ion-toolbar>
+      <ion-buttons slot="end">
+        <ion-button color="primary" (click)="abort()">Abbrechen</ion-button>
+        <ion-button [disabled]="!form.valid" color="primary" (click)="submit()">Erstellen</ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-card-content>
+</ion-card>

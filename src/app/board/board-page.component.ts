@@ -2,10 +2,11 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { RetroBoard } from './model';
 import { RetroBoardService } from './retro-board.service';
-import { AlertController, NavController } from '@ionic/angular';
+import { AlertController, ModalController, NavController } from '@ionic/angular';
 import { ActivatedRoute } from '@angular/router';
-import { filter, map, switchMap, take } from 'rxjs/operators';
+import { filter, map, shareReplay, switchMap, take } from 'rxjs/operators';
 import { UserService } from '../user.service';
+import { NewBoardModalComponent } from './new-board-modal/new-board-modal.component';
 
 @Component({
   templateUrl: 'board-page.component.html',
@@ -14,12 +15,14 @@ import { UserService } from '../user.service';
 })
 export class BoardPage implements OnInit {
   showAlphaInfo = true;
-  selectedBoard$: Observable<RetroBoard> = this.route.paramMap.pipe(
-    map((params) => params.get('id')),
-    filter((id) => !!id),
-    switchMap((id) => this.retroBoards$.pipe(map((boards) => boards.find((board) => board.id === id))))
-  );
-  retroBoards$: Observable<RetroBoard[]> = this.retroBoardService.retroBoards$;
+  selectedBoard$: Observable<RetroBoard> = this.route.paramMap
+    .pipe(
+      map((params) => params.get('id')),
+      filter((id) => !!id),
+      switchMap((id) => this.retroBoardService.getBoard$(id))
+    )
+    .pipe(shareReplay({ bufferSize: 1, refCount: true }));
+  publicRetroBoards$: Observable<RetroBoard[]> = this.retroBoardService.publicRetroBoards$;
   username$ = this.userService.username$;
   cardIndexes$ = this.selectedBoard$.pipe(map((board) => board.cards.map((card, i) => i)));
 
@@ -28,7 +31,8 @@ export class BoardPage implements OnInit {
     private alertController: AlertController,
     private route: ActivatedRoute,
     private navCtrl: NavController,
-    private userService: UserService
+    private userService: UserService,
+    public modalController: ModalController
   ) {}
 
   async ngOnInit() {
@@ -41,44 +45,11 @@ export class BoardPage implements OnInit {
     this.navCtrl.navigateForward('/board/' + id);
   }
 
-  async createNewBoard() {
-    this.showNewBoardPopup('');
-  }
-
-  async showNewBoardPopup(error: string) {
-    const alertDialog = await this.alertController.create({
-      header: 'Neues Retro Board erstellen',
-      subHeader: error,
-      inputs: [
-        {
-          name: 'title',
-          type: 'text',
-          placeholder: 'Board Titel eingeben...',
-        },
-      ],
-      buttons: [
-        {
-          text: 'Abbrechen',
-          role: 'cancel',
-          cssClass: 'secondary',
-        },
-        {
-          text: 'OK',
-          handler: (input) => {
-            if (!input.title) {
-              return false;
-            }
-            this.retroBoardService.createNewBoard(input.title).then(
-              (ref) => this.navigateToBoard(ref.id),
-              () => {
-                this.showNewBoardPopup('Dieser Titel wird bereits verwendet');
-              }
-            );
-          },
-        },
-      ],
+  async showNewBoardModal() {
+    const modal = await this.modalController.create({
+      component: NewBoardModalComponent,
     });
-    alertDialog.present();
+    await modal.present();
   }
 
   async showLoginPopup() {
@@ -111,7 +82,7 @@ export class BoardPage implements OnInit {
         },
       ],
     });
-    alertDialog.present();
+    await alertDialog.present();
   }
 
   deleteBoard(id: string) {

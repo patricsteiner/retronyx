@@ -2,19 +2,23 @@
 import Timestamp = firebase.firestore.Timestamp;
 
 export class RetroBoard {
-  readonly id: string;
-  readonly createdAt: Date | Timestamp;
-  readonly title: string;
-  readonly cards: RetroCard[] = [
+  id: string;
+  createdAt: Date | Timestamp;
+  createdBy: string;
+  public: boolean;
+  title: string;
+  cards: RetroCard[] = [
     { emoji: '😃', title: 'Positives', items: [] },
     { emoji: '😥', title: 'Negatives', items: [] },
     { emoji: '💡', title: 'Ideen', items: [] },
     { emoji: '🌷', title: 'Dankeschön', items: [] },
   ];
 
-  constructor(title: string) {
+  constructor(title: string, isPublic: boolean, createdBy: string) {
     this.title = title;
+    this.public = isPublic;
     this.createdAt = new Date();
+    this.createdBy = createdBy;
   }
 }
 
