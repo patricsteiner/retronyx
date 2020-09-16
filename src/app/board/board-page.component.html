@@ -35,6 +35,9 @@
         <ion-icon *ngIf="username$ | async" name="person"></ion-icon>
         <ion-icon *ngIf="!(username$ | async)" name="person-outline"></ion-icon>
       </ion-button>
+      <ion-button color="dark" fill="clear" (click)="showAboutModal()">
+        <ion-icon name="information-circle-outline"></ion-icon>
+      </ion-button>
       <!--      <ion-button (click)="this.retroBoardService.deleteAll()" color="danger" fill="outline">DELETE ALL </ion-button>-->
     </ion-buttons>
   </ion-toolbar>
@@ -53,47 +56,6 @@
     </ion-row>
   </ion-grid>
 </ion-content>
-
-<ion-footer *ngIf="showAlphaInfo" [translucent]="true">
-  <ion-toolbar color="warning">
-    <ion-title>
-      <!--      <ion-icon size="small" name="warning" color="danger"></ion-icon>-->
-      <!--      ALPHA Release-->
-      <div style="font-size: 70%;" class="ion-text-wrap">
-        Diese App ist noch in Entwicklung, darf aber auf eigene Gefahr gerne bereits benutzt werden. ✌️😃
-        <a
-          class="github-button"
-          href="https://github.com/patricsteiner/retronyx"
-          data-color-scheme="no-preference: light; light: light; dark: dark;"
-          data-icon="octicon-star"
-          data-size="large"
-          data-show-count="true"
-          aria-label="Star patricsteiner/retronyx on GitHub"
-          >Star</a
-        >
-        <a
-          class="github-button"
-          href="https://github.com/patricsteiner/retronyx/issues"
-          data-color-scheme="no-preference: light; light: light; dark: dark;"
-          data-icon="octicon-issue-opened"
-          data-size="large"
-          data-show-count="true"
-          aria-label="Issue patricsteiner/retronyx on GitHub"
-          >Issue</a
-        >
-        <ion-button
-          (click)="showAlphaInfo = false"
-          size="small"
-          shape="round"
-          color="dark"
-          style="position: absolute; right: 16px; top: 4px;"
-        >
-          <ion-icon slot="icon-only" name="close"></ion-icon>
-        </ion-button>
-      </div>
-    </ion-title>
-  </ion-toolbar>
-</ion-footer>
 
 <ng-template #noBoardSelected>
   <div id="noBoardSelected">

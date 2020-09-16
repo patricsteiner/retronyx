@@ -7,6 +7,7 @@ import { ActivatedRoute } from '@angular/router';
 import { filter, map, shareReplay, switchMap, take } from 'rxjs/operators';
 import { UserService } from '../user.service';
 import { NewBoardModalComponent } from './new-board-modal/new-board-modal.component';
+import { AboutComponent } from '../about/about.component';
 
 @Component({
   templateUrl: 'board-page.component.html',
@@ -14,7 +15,6 @@ import { NewBoardModalComponent } from './new-board-modal/new-board-modal.compon
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BoardPage implements OnInit {
-  showAlphaInfo = true;
   selectedBoard$: Observable<RetroBoard> = this.route.paramMap
     .pipe(
       map((params) => params.get('id')),
@@ -43,13 +43,6 @@ export class BoardPage implements OnInit {
 
   navigateToBoard(id: string) {
     this.navCtrl.navigateForward('/board/' + id);
-  }
-
-  async showNewBoardModal() {
-    const modal = await this.modalController.create({
-      component: NewBoardModalComponent,
-    });
-    await modal.present();
   }
 
   async showLoginPopup() {
@@ -83,6 +76,22 @@ export class BoardPage implements OnInit {
       ],
     });
     await alertDialog.present();
+  }
+
+  async showNewBoardModal() {
+    const modal = await this.modalController.create({
+      component: NewBoardModalComponent,
+      cssClass: 'new-board-modal',
+    });
+    await modal.present();
+  }
+
+  async showAboutModal() {
+    const modal = await this.modalController.create({
+      component: AboutComponent,
+      cssClass: 'about-modal',
+    });
+    await modal.present();
   }
 
   deleteBoard(id: string) {

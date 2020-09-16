@@ -1,0 +1,8 @@
+:host * {
+  --backdrop-opacity: 0;
+  //max-height: 100px;
+}
+
+:host-context {
+  --backdrop-opacity: 0;
+}

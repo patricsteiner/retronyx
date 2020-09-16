@@ -24,3 +24,11 @@
 @import '~@ionic/angular/css/text-alignment.css';
 @import '~@ionic/angular/css/text-transformation.css';
 @import '~@ionic/angular/css/flex-utils.css';
+
+.new-board-modal,
+.about-modal {
+  & .modal-wrapper {
+    --background: transparent;
+    --box-shadow: 0;
+  }
+}
