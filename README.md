@@ -14,3 +14,4 @@ A fresh app for collaborative agile retrospectives.
 - [ ] Avoid empty strings as titles/names
 - [ ] Disallow deletion of a board (because there is no (and there shall not be) login/RBAC) --> Assume it to be well-behaved (inside a board)
 - [ ] Nicer "no board selected" page
+- [ ] Maybe split the board items to its own subcollection -> non-transactional DB writes are faster and do not necessarily require cloud functions
