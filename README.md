@@ -19,9 +19,10 @@ A fresh app for collaborative agile retrospectives.
 - [ ] Maybe implement a service/store for optimistic db writes and cached reads
 
 ## Potential features
-- [ ] Presence (show which users are online)
+- [ ] Action items (or make better use of the flags?)
 - [ ] Item editing (should do "split board items in own subcollection" first)
 - [ ] Add/remove cards
+- [ ] Presence (show which users are online)
 - [ ] Click/hover on a user to highlight his items
 
 
