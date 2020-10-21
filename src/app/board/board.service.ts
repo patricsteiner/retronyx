@@ -11,7 +11,7 @@ const BOARDS_COLLECTION_NAME = 'boards';
 @Injectable({
   providedIn: 'root',
 })
-export class RetroBoardService {
+export class BoardService {
   private readonly boardsCollection = this.firestore.collection<RetroBoard>(BOARDS_COLLECTION_NAME);
 
   constructor(

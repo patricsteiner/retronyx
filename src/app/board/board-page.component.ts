@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { RetroBoard } from './model';
-import { RetroBoardService } from './retro-board.service';
+import { BoardService } from './board.service';
 import { AlertController, ModalController, NavController } from '@ionic/angular';
 import { ActivatedRoute } from '@angular/router';
 import { filter, map, shareReplay, switchMap, take } from 'rxjs/operators';
@@ -27,7 +27,7 @@ export class BoardPage implements OnInit {
   cardIndexes$ = this.selectedBoard$.pipe(map((board) => board.cards.map((card, i) => i)));
 
   constructor(
-    private retroBoardService: RetroBoardService,
+    private retroBoardService: BoardService,
     private alertController: AlertController,
     private route: ActivatedRoute,
     private navCtrl: NavController,

@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { ModalController, NavController } from '@ionic/angular';
 import { FormBuilder, Validators } from '@angular/forms';
-import { RetroBoardService } from '../retro-board.service';
+import { BoardService } from '../board.service';
 import { CustomValidators } from '../../custom-validators';
 
 @Component({
@@ -18,7 +18,7 @@ export class NewBoardModalComponent {
   constructor(
     private fb: FormBuilder,
     private modalController: ModalController,
-    private retroBoardService: RetroBoardService,
+    private retroBoardService: BoardService,
     private navCtrl: NavController
   ) {}
 

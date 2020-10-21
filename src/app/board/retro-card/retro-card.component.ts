@@ -3,7 +3,7 @@ import { RetroCard, RetroCardItem } from '../model';
 import { UserService } from '../../user.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { RetroBoardService } from '../retro-board.service';
+import { BoardService } from '../board.service';
 import { AlertController } from '@ionic/angular';
 
 @Component({
@@ -30,7 +30,7 @@ export class RetroCardComponent implements OnInit, OnDestroy {
 
   constructor(
     private userService: UserService,
-    private retroBoardService: RetroBoardService,
+    private retroBoardService: BoardService,
     private alertController: AlertController,
     private changeDetectorRef: ChangeDetectorRef
   ) {}

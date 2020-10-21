@@ -1,12 +1,12 @@
 import { TestBed } from '@angular/core/testing';
 
-import { RetroBoardService } from './retro-board.service';
+import { BoardService } from './board.service';
 
-describe('RetroBoardService', () => {
+describe('BoardService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
 
   it('should be created', () => {
-    const service: RetroBoardService = TestBed.get(RetroBoardService);
+    const service: BoardService = TestBed.get(BoardService);
     expect(service).toBeTruthy();
   });
 });
