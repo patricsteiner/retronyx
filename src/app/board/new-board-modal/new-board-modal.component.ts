@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { ModalController, NavController } from '@ionic/angular';
 import { FormBuilder, Validators } from '@angular/forms';
 import { RetroBoardService } from '../retro-board.service';
+import { CustomValidators } from '../../custom-validators';
 
 @Component({
   templateUrl: './new-board-modal.component.html',
@@ -9,7 +10,7 @@ import { RetroBoardService } from '../retro-board.service';
 })
 export class NewBoardModalComponent {
   form = this.fb.group({
-    title: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]],
+    title: ['', [Validators.required, CustomValidators.notEmpty, Validators.minLength(3), Validators.maxLength(100)]],
     public: [false],
   });
   error: string = '';

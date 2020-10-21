@@ -82,7 +82,7 @@ export class RetroCardComponent implements OnInit, OnDestroy {
   }
 
   submit() {
-    if (this.itemText) {
+    if (this.itemText && this.itemText.trim().length !== 0) {
       this.addItem({ text: this.itemText, user: this.username, likes: [] });
       this.itemText = '';
     }
@@ -132,7 +132,7 @@ export class RetroCardComponent implements OnInit, OnDestroy {
         {
           text: 'OK',
           handler: (input) => {
-            if (!input.title || (input.title === title && input.emoji === emoji)) {
+            if (!input.title || !input.title.trim() || (input.title === title && input.emoji === emoji)) {
               return false;
             }
             this.updateCardTitle(input.title, input.emoji);

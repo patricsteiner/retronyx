@@ -58,7 +58,14 @@
           maxlength="200"
           minlength="2"
         ></ion-input>
-        <ion-fab-button id="submit" slot="end" color="primary" size="small" [disabled]="!itemText" (click)="submit()">
+        <ion-fab-button
+          id="submit"
+          slot="end"
+          color="primary"
+          size="small"
+          [disabled]="!itemText || itemText.trim().length === 0"
+          (click)="submit()"
+        >
           <ion-icon name="add"></ion-icon>
         </ion-fab-button>
       </ion-item>
