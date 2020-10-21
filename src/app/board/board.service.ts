@@ -69,10 +69,10 @@ export class BoardService {
     updateCardTitleFunction({ boardId, cardIdx, title, emoji });
   }
 
-  async createNewBoard(title: string) {
+  async createNewBoard(title: string, template: string) {
     title = title.substring(0, 100);
     const user = await this.userService.currentUser();
-    const board = new RetroBoard(title, user);
+    const board = new RetroBoard(title, user, template);
     return this.boardsCollection.add({ ...board });
   }
 

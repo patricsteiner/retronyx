@@ -1,6 +1,10 @@
 <ion-card>
   <ion-card-header>
     <ion-card-title>Create a new retro board</ion-card-title>
+    <ion-card-subtitle>
+      After creating the board, you can send the link to your colleagues to collaborate. <br />
+      Don't loose your link, or you will lose access to the board!
+    </ion-card-subtitle>
   </ion-card-header>
   <ion-card-content>
     <form [formGroup]="form" (ngSubmit)="submit()">
@@ -19,10 +23,11 @@
         <ion-text color="danger">{{ error }}</ion-text>
       </ion-item>
       <ion-item>
-        <ion-text style="font-size: 0.7rem;" color="medium">
-          After creating the board, you can send the link to your colleagues to collaborate. <br />
-          Don't loose your link, or you will lose access to the board!
-        </ion-text>
+        <ion-segment value="EN" (ionChange)="form.controls.template.setValue($event.detail.value)">
+          <ion-segment-button value="EN">English</ion-segment-button>
+          <ion-segment-button value="DE">Deutsch</ion-segment-button>
+          <ion-segment-button value="CH">Bärndütsch</ion-segment-button>
+        </ion-segment>
       </ion-item>
     </form>
     <ion-toolbar>

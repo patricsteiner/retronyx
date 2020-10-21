@@ -11,6 +11,7 @@ import { CustomValidators } from '../../custom-validators';
 export class NewBoardModalComponent {
   form = this.fb.group({
     title: ['', [Validators.required, CustomValidators.notEmpty, Validators.minLength(3), Validators.maxLength(100)]],
+    template: ['EN', [Validators.required]],
   });
   error: string = '';
 
@@ -26,7 +27,7 @@ export class NewBoardModalComponent {
       this.error = 'Please enter a title between 3 and 100 characters';
       return;
     }
-    this.retroBoardService.createNewBoard(this.form.value.title).then(
+    this.retroBoardService.createNewBoard(this.form.value.title, this.form.value.template).then(
       (ref) => this.navigateToBoard(ref.id),
       () => {
         this.error = 'Sorry, could not create the board... Some error happened :(';
