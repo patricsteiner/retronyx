@@ -14,10 +14,10 @@ import { environment } from '../environments/environment';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { AngularFireFunctionsModule, REGION } from '@angular/fire/functions';
-import { AboutComponent } from './about/about.component';
+import { AboutModalComponent } from './about-modal/about-modal.component';
 
 @NgModule({
-  declarations: [AppComponent, AboutComponent],
+  declarations: [AppComponent, AboutModalComponent],
   entryComponents: [],
   imports: [
     BrowserModule,

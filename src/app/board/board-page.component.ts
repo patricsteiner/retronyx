@@ -7,7 +7,7 @@ import { ActivatedRoute } from '@angular/router';
 import { filter, map, shareReplay, switchMap, take } from 'rxjs/operators';
 import { UserService } from '../user.service';
 import { NewBoardModalComponent } from './new-board-modal/new-board-modal.component';
-import { AboutComponent } from '../about/about.component';
+import { AboutModalComponent } from '../about-modal/about-modal.component';
 
 @Component({
   templateUrl: 'board-page.component.html',
@@ -88,7 +88,7 @@ export class BoardPage implements OnInit {
 
   async showAboutModal() {
     const modal = await this.modalController.create({
-      component: AboutComponent,
+      component: AboutModalComponent,
       cssClass: 'about-modal',
     });
     await modal.present();

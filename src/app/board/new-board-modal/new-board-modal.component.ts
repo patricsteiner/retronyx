@@ -4,7 +4,6 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { RetroBoardService } from '../retro-board.service';
 
 @Component({
-  selector: 'app-new-board-modal',
   templateUrl: './new-board-modal.component.html',
   styleUrls: ['./new-board-modal.component.scss'],
 })
