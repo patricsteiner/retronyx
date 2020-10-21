@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage';
 import { BehaviorSubject } from 'rxjs';
-import { map } from 'rxjs/operators';
 
 const USERNAME_KEY = 'username';
 
@@ -26,7 +25,7 @@ export class UserService {
   }
 
   login(username: string) {
-    username = username.substring(0, 20);
+    username = username.trim().substring(0, 20);
     this.usernameSubject.next(username);
     return this.storage.set(USERNAME_KEY, username);
   }

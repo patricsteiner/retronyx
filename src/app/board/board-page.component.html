@@ -6,7 +6,7 @@
         OnyxRetro
       </ion-title>
       <span id="boardTitle"
-        ><strong>{{ (selectedBoard$ | async)?.title }}</strong></span
+        ><strong>{{ (board$ | async)?.title }}</strong></span
       >
     </ion-buttons>
 
@@ -26,21 +26,15 @@
 </ion-header>
 
 <ion-content [fullscreen]="false">
-  <ion-grid *ngIf="selectedBoard$ | async as selectedBoard; else noBoardSelected">
+  <ion-grid *ngIf="board$ | async as board; else noBoard">
     <ion-row>
       <ion-col size="12" size-md="6" *ngFor="let i of cardIndexes$ | async">
-        <app-retro-card
-          [retroCard]="selectedBoard.cards[i]"
-          [cardIdx]="i"
-          [boardId]="selectedBoard.id"
-        ></app-retro-card>
+        <app-retro-card [retroCard]="board.cards[i]" [cardIdx]="i" [boardId]="board.id"></app-retro-card>
       </ion-col>
     </ion-row>
   </ion-grid>
 </ion-content>
 
-<ng-template #noBoardSelected>
-  <div id="noBoardSelected">
-    <h1>Bitte ein Board auswählen</h1>
-  </div>
+<ng-template #noBoard>
+  <app-landing></app-landing>
 </ng-template>

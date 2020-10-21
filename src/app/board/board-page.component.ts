@@ -15,7 +15,7 @@ import { AboutModalComponent } from '../about-modal/about-modal.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BoardPage implements OnInit {
-  selectedBoard$: Observable<RetroBoard> = this.route.paramMap
+  board$: Observable<RetroBoard> = this.route.paramMap
     .pipe(
       map((params) => params.get('id')),
       filter((id) => !!id),
@@ -23,7 +23,7 @@ export class BoardPage implements OnInit {
     )
     .pipe(shareReplay({ bufferSize: 1, refCount: true }));
   username$ = this.userService.username$;
-  cardIndexes$ = this.selectedBoard$.pipe(map((board) => board.cards.map((card, i) => i)));
+  cardIndexes$ = this.board$.pipe(map((board) => board.cards.map((card, i) => i)));
 
   constructor(
     private retroBoardService: BoardService,
@@ -62,7 +62,7 @@ export class BoardPage implements OnInit {
         {
           text: 'OK',
           handler: (input) => {
-            if (!input.name) {
+            if (!input.name || !input.name.trim()) {
               return false;
             }
             this.userService.login(input.name);

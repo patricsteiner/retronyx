@@ -8,10 +8,11 @@ import { BoardPageRoutingModule } from './board-routing.module';
 import { RetroCardComponent } from './retro-card/retro-card.component';
 import { ColorHashPipe } from './color-hash.pipe';
 import { NewBoardModalComponent } from './new-board-modal/new-board-modal.component';
+import { LandingComponent } from './landing/landing.component';
 
 @NgModule({
   imports: [CommonModule, FormsModule, ReactiveFormsModule, IonicModule, BoardPageRoutingModule],
-  declarations: [BoardPage, RetroCardComponent, NewBoardModalComponent, ColorHashPipe],
+  declarations: [BoardPage, RetroCardComponent, NewBoardModalComponent, ColorHashPipe, LandingComponent],
   exports: [ColorHashPipe],
 })
 export class BoardPageModule {}
