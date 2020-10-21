@@ -22,7 +22,6 @@ export class BoardPage implements OnInit {
       switchMap((id) => this.retroBoardService.getBoard$(id))
     )
     .pipe(shareReplay({ bufferSize: 1, refCount: true }));
-  publicRetroBoards$: Observable<RetroBoard[]> = this.retroBoardService.publicRetroBoards$;
   username$ = this.userService.username$;
   cardIndexes$ = this.selectedBoard$.pipe(map((board) => board.cards.map((card, i) => i)));
 

@@ -15,18 +15,6 @@
           maxlength="100"
         ></ion-input>
       </ion-item>
-      <ion-item-group>
-        <ion-item>
-          <ion-text slot="start" class="ion-text-wrap">Öffentlich anzeigen</ion-text>
-          <ion-toggle slot="end" formControlName="public"></ion-toggle>
-        </ion-item>
-        <ion-item>
-          <ion-note class="ion-text-wrap"
-            >Öffentliche Boards werden oben im Dropdown angezeigt. Nicht-öffentliche Boards hingegen können nur mit dem
-            dazugehörigen Link aufgerufen werden.
-          </ion-note>
-        </ion-item>
-      </ion-item-group>
       <ion-item *ngIf="error">
         <ion-text color="danger">{{ error }}</ion-text>
       </ion-item>

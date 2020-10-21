@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { RetroBoard, RetroCardItem } from './model';
-import { filter, first, shareReplay, tap } from 'rxjs/operators';
+import { filter, tap } from 'rxjs/operators';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { UserService } from '../user.service';
@@ -19,16 +19,6 @@ export class BoardService {
     private functions: AngularFireFunctions,
     private userService: UserService
   ) {}
-
-  public publicRetroBoards$: Observable<RetroBoard[]> = this.firestore
-    .collection<RetroBoard>(BOARDS_COLLECTION_NAME, (ref) =>
-      ref.where('public', '==', true).orderBy('createdAt', 'desc')
-    )
-    .valueChanges({ idField: 'id' })
-    .pipe(
-      tap(() => console.log('READ N FROM DB')),
-      shareReplay({ bufferSize: 1, refCount: true })
-    );
 
   getBoard$(id: string): Observable<RetroBoard> {
     return this.boardsCollection
@@ -79,19 +69,10 @@ export class BoardService {
     updateCardTitleFunction({ boardId, cardIdx, title, emoji });
   }
 
-  async createNewBoard(title: string, isPublic: boolean) {
+  async createNewBoard(title: string) {
     title = title.substring(0, 100);
     const user = await this.userService.currentUser();
-    const board = new RetroBoard(title, isPublic, user);
-    const allBoards = await this.publicRetroBoards$.pipe(first()).toPromise();
-    if (
-      allBoards
-        .filter((b) => b.public)
-        .map((b) => b.title)
-        .includes(title)
-    ) {
-      return Promise.reject();
-    }
+    const board = new RetroBoard(title, user);
     return this.boardsCollection.add({ ...board });
   }
 

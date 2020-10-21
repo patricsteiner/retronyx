@@ -5,7 +5,6 @@ export class RetroBoard {
   id: string;
   createdAt: Date | Timestamp;
   createdBy: string;
-  public: boolean;
   title: string;
   cards: RetroCard[] = [
     { emoji: '😃', title: 'Positives', items: [] },
@@ -14,9 +13,8 @@ export class RetroBoard {
     { emoji: '🌷', title: 'Dankeschön', items: [] },
   ];
 
-  constructor(title: string, isPublic: boolean, createdBy: string) {
+  constructor(title: string, createdBy: string) {
     this.title = title;
-    this.public = isPublic;
     this.createdAt = new Date();
     this.createdBy = createdBy;
   }

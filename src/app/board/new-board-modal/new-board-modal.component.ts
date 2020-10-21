@@ -11,7 +11,6 @@ import { CustomValidators } from '../../custom-validators';
 export class NewBoardModalComponent {
   form = this.fb.group({
     title: ['', [Validators.required, CustomValidators.notEmpty, Validators.minLength(3), Validators.maxLength(100)]],
-    public: [false],
   });
   error: string = '';
 
@@ -27,10 +26,10 @@ export class NewBoardModalComponent {
       this.error = 'Bitte einen Titel zwischen 3 und 100 Zeichen eingeben';
       return;
     }
-    this.retroBoardService.createNewBoard(this.form.value.title, this.form.value.public).then(
+    this.retroBoardService.createNewBoard(this.form.value.title).then(
       (ref) => this.navigateToBoard(ref.id),
       () => {
-        this.error = 'Dieser Titel wird bereits verwendet';
+        this.error = 'Sorry, could not create the board... Some error happened :(';
       }
     );
     this.modalController.dismiss();
