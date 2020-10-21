@@ -12,7 +12,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { AngularFireModule } from '@angular/fire';
 import { environment } from '../environments/environment';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
-import { ServiceWorkerModule } from '@angular/service-worker';
 import { AngularFireFunctionsModule, REGION } from '@angular/fire/functions';
 import { AboutModalComponent } from './about-modal/about-modal.component';
 
@@ -27,7 +26,6 @@ import { AboutModalComponent } from './about-modal/about-modal.component';
     AngularFirestoreModule,
     AngularFireFunctionsModule,
     AppRoutingModule,
-    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
   ],
   providers: [
     StatusBar,
