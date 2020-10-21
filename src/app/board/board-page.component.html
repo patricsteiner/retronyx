@@ -1,11 +1,13 @@
 <ion-header [translucent]="true">
   <ion-toolbar color="light">
     <ion-buttons slot="start">
-      <img src="assets/icon/onyx.png" id="logo" alt="onyx logo" />
+      <img src="assets/icon/onyx.png" id="logo" alt="OnyxRetro logo" />
       <ion-title>
         OnyxRetro
       </ion-title>
-      <strong>{{ (selectedBoard$ | async)?.title }}</strong>
+      <span id="boardTitle"
+        ><strong>{{ (selectedBoard$ | async)?.title }}</strong></span
+      >
     </ion-buttons>
 
     <ion-buttons slot="end">

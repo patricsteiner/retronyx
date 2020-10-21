@@ -25,7 +25,7 @@
               item.user || 'Unbekannt'
             }}</ion-label>
           </ion-chip>
-          <ion-label class="ion-text-wrap">{{ item.text }}</ion-label>
+          <ion-label class="ion-text-wrap item">{{ item.text }}</ion-label>
           <ion-icon *ngIf="item.flag" name="flag" color="danger"></ion-icon>
           <ion-chip class="likes" outline="true" (click)="toggleLike(itemIdx)" [title]="item.likes">
             <ion-label>{{ item.likes.length }}</ion-label>

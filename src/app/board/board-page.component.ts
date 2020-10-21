@@ -40,10 +40,6 @@ export class BoardPage implements OnInit {
     }
   }
 
-  navigateToBoard(id: string) {
-    this.navCtrl.navigateForward('/board/' + id);
-  }
-
   async showLoginPopup() {
     const username = await this.username$.pipe(take(1)).toPromise();
     const alertDialog = await this.alertController.create({

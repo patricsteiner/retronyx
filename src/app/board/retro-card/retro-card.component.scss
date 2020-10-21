@@ -19,6 +19,10 @@ ion-card {
   user-select: none;
 }
 
+.item {
+  user-select: text;
+}
+
 .likes {
   transform: scale(0.7);
 }
