@@ -21,8 +21,8 @@
       <ion-item-sliding *ngFor="let item of retroCard.items; let itemIdx = index" #slidingItem>
         <ion-item *ngIf="!item.deleted">
           <ion-chip class="user" [ngStyle]="{ background: item.user | colorHash }">
-            <ion-label [ngStyle]="{ color: item.user | colorHash: true }" title="{{ item.user || 'Unbekannt' }}">{{
-              item.user || 'Unbekannt'
+            <ion-label [ngStyle]="{ color: item.user | colorHash: true }" title="{{ item.user || 'Unknown' }}">{{
+              item.user || 'Unknown'
             }}</ion-label>
           </ion-chip>
           <ion-label class="ion-text-wrap item">{{ item.text }}</ion-label>
@@ -52,7 +52,7 @@
       </ion-item-sliding>
       <ion-item>
         <ion-input
-          placeholder="Eintrag hinzufügen..."
+          placeholder="Add entry..."
           [(ngModel)]="itemText"
           (keydown.enter)="submit()"
           maxlength="200"

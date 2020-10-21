@@ -8,16 +8,15 @@ A fresh app for collaborative, agile retrospectives.
 
 ## TODO
 
-- [ ] I18N (currently only german is supported)
 - [x] Reduce DB reads (e.g. readmodel for public boards, or just remove public boards)
 - [x] Avoid empty strings as titles/names
 - [x] Disallow deletion of a board (because there is no (and there shall not be) login/RBAC) --> Assume it to be well-behaved (inside a board)
 - [ ] Nicer "no board selected" page
 - [ ] Add timestamps to items (cuz why not)
 - [ ] improve like visibility
-- [ ] Maybe split the board items to its own subcollection -> non-transactional DB writes are faster and do not necessarily require cloud functions
-- [ ] Maybe remove service worker/PWA capabilities. Or at least assure new versions are fetched on time
-- [ ] Maybe implement a service/store for optimistic db writes and cached reads (currently rather ugly workaround in the code, marked as TODO)
+- [ ] Split the board items to its own subcollection -> non-transactional DB writes are faster and do not necessarily require cloud functions
+- [x] Remove service worker/PWA capabilities. Or at least assure new versions are fetched on time
+- [ ] Implement a service/store for optimistic db writes and cached reads (currently rather ugly workaround in the code, marked as TODO)
 
 ## Potential features
 
@@ -29,3 +28,4 @@ A fresh app for collaborative, agile retrospectives.
 - [ ] Click/hover on a user to highlight his items
 - [ ] Login/Permissions?
 - [ ] Teams (i.e. board belongs to a team, requires login)
+- [ ] I18N (currently only english is supported)

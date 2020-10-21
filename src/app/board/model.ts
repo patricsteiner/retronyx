@@ -7,10 +7,10 @@ export class RetroBoard {
   createdBy: string;
   title: string;
   cards: RetroCard[] = [
-    { emoji: '😃', title: 'Positives', items: [] },
-    { emoji: '😥', title: 'Negatives', items: [] },
-    { emoji: '💡', title: 'Ideen', items: [] },
-    { emoji: '🌷', title: 'Dankeschön', items: [] },
+    { emoji: '😃', title: 'What went well?', items: [] },
+    { emoji: '😥', title: 'What could be improved?', items: [] },
+    { emoji: '💡', title: 'Ideas', items: [] },
+    { emoji: '🌷', title: 'Thank you', items: [] },
   ];
 
   constructor(title: string, createdBy: string) {

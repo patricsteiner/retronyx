@@ -22,6 +22,7 @@ export class ColorHashPipe implements PipeTransform {
   private static contrast(hexcolor) {
     return parseInt(hexcolor, 16) > 0xffffff / 2 ? '000000' : 'ffffff';
   }
+
   transform(value: string, contrast?: boolean): string {
     if (!value) {
       return contrast ? '#EEEEEE' : '#AAAAAA';

@@ -43,19 +43,19 @@ export class BoardPage implements OnInit {
   async showLoginPopup() {
     const username = await this.username$.pipe(take(1)).toPromise();
     const alertDialog = await this.alertController.create({
-      header: 'Wie ist dein Name?',
+      header: "What's your name?",
       subHeader: '',
       inputs: [
         {
           name: 'name',
           type: 'text',
           value: username,
-          placeholder: 'Bitte Namen eingeben...',
+          placeholder: 'Please enter your name...',
         },
       ],
       buttons: [
         {
-          text: 'Abbrechen',
+          text: 'Abort',
           role: 'cancel',
           cssClass: 'secondary',
         },

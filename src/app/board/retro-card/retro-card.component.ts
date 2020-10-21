@@ -108,25 +108,25 @@ export class RetroCardComponent implements OnInit, OnDestroy {
 
   async showEditCardPopup(title: string, emoji: string) {
     const alertDialog = await this.alertController.create({
-      header: 'Karte anpassen',
+      header: 'Adjust card',
       // subHeader: error,
       inputs: [
         {
           name: 'title',
           type: 'text',
-          placeholder: 'Bitte einen Titel eingeben...',
+          placeholder: 'Please enter a title...',
           value: title,
         },
         {
           name: 'emoji',
           type: 'text',
-          placeholder: 'Optional ein Emoji einfügen...',
+          placeholder: 'Optionally add an emoji...',
           value: emoji,
         },
       ],
       buttons: [
         {
-          text: 'Abbrechen',
+          text: 'Abort',
           role: 'cancel',
           cssClass: 'secondary',
         },

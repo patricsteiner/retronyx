@@ -23,7 +23,7 @@ export class NewBoardModalComponent {
 
   submit() {
     if (!this.form.valid) {
-      this.error = 'Bitte einen Titel zwischen 3 und 100 Zeichen eingeben';
+      this.error = 'Please enter a title between 3 and 100 characters';
       return;
     }
     this.retroBoardService.createNewBoard(this.form.value.title).then(
