@@ -1,6 +1,6 @@
 # OnyxRetro
 
-A fresh app for collaborative agile retrospectives.
+A fresh app for collaborative, agile retrospectives.
 
 [onyxretro.web.app](https://onyxretro.web.app)
 
@@ -20,12 +20,12 @@ A fresh app for collaborative agile retrospectives.
 - [ ] Maybe implement a service/store for optimistic db writes and cached reads (currently rather ugly workaround in the code, marked as TODO)
 
 ## Potential features
+
 - [ ] Action items (or make better use of the flags?)
 - [ ] Item editing (should do "split board items in own subcollection" first)
 - [ ] Add/remove cards
 - [ ] Presence (show which users are online)
+- [ ] Readiness (users can click "done", requires presence)
 - [ ] Click/hover on a user to highlight his items
 - [ ] Login/Permissions?
-- [ ] Teams
-
-
+- [ ] Teams (i.e. board belongs to a team, requires login)

@@ -22,15 +22,6 @@
       <ion-button color="primary" fill="clear" (click)="showNewBoardModal()">
         <ion-icon name="add-outline"></ion-icon>
       </ion-button>
-      <ion-button
-        *ngIf="selectedBoard$ | async as selectedBoard"
-        color="danger"
-        size="small"
-        fill="clear"
-        (click)="deleteBoard(selectedBoard.id)"
-      >
-        <ion-icon name="trash-outline"></ion-icon>
-      </ion-button>
       <ion-button color="dark" fill="clear" (click)="showLoginPopup()">
         <ion-icon *ngIf="username$ | async" name="person"></ion-icon>
         <ion-icon *ngIf="!(username$ | async)" name="person-outline"></ion-icon>
@@ -38,7 +29,6 @@
       <ion-button color="dark" fill="clear" (click)="showAboutModal()">
         <ion-icon name="information-circle-outline"></ion-icon>
       </ion-button>
-      <!--      <ion-button (click)="this.retroBoardService.deleteAll()" color="danger" fill="outline">DELETE ALL </ion-button>-->
     </ion-buttons>
   </ion-toolbar>
 </ion-header>

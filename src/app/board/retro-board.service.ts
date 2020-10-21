@@ -95,14 +95,14 @@ export class RetroBoardService {
     return this.boardsCollection.add({ ...board });
   }
 
-  async deleteBoard(id: string) {
-    return this.boardsCollection.doc(id).delete();
-  }
-
-  async deleteAll() {
-    const allBoardsQuerySnapshot = await this.boardsCollection.ref.get();
-    allBoardsQuerySnapshot.forEach((doc) => {
-      doc.ref.delete();
-    });
-  }
+  // async deleteBoard(id: string) {
+  //   return this.boardsCollection.doc(id).delete();
+  // }
+  //
+  // async deleteAll() {
+  //   const allBoardsQuerySnapshot = await this.boardsCollection.ref.get();
+  //   allBoardsQuerySnapshot.forEach((doc) => {
+  //     doc.ref.delete();
+  //   });
+  // }
 }

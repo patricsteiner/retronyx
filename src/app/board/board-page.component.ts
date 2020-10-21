@@ -93,11 +93,4 @@ export class BoardPage implements OnInit {
     });
     await modal.present();
   }
-
-  deleteBoard(id: string) {
-    if (confirm('Soll dieses Board wirklich gelöscht werden?')) {
-      this.retroBoardService.deleteBoard(id);
-      this.navCtrl.navigateRoot('/board');
-    }
-  }
 }

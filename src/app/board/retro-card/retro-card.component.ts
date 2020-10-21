@@ -82,7 +82,8 @@ export class RetroCardComponent implements OnInit, OnDestroy {
   }
 
   submit() {
-    if (this.itemText && this.itemText.trim().length !== 0) {
+    this.itemText = this.itemText.trim();
+    if (this.itemText) {
       this.addItem({ text: this.itemText, user: this.username, likes: [] });
       this.itemText = '';
     }
