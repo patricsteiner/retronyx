@@ -43,7 +43,7 @@ export interface RetroCard {
 
 export interface RetroBoardEntry {
   id?: string;
-  position?: number;
+  position?: number; // note that this is set client-side and thus not guaranteed to be unique, but it is good enough for now.
   cardIdx: number;
   text: string;
   likes: string[];

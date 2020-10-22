@@ -27,7 +27,7 @@ export class BoardService {
         .pipe(
           filter((value) => !!value),
           tap((it) => (it.id = id)),
-          tap(() => console.log('READ 1 BOARD FROM DB'))
+          tap(() => console.debug('READ 1 BOARD FROM DB'))
         )
     )
   );
@@ -41,7 +41,7 @@ export class BoardService {
         .valueChanges({ idField: 'id' })
         .pipe(
           filter((value) => !!value),
-          tap(() => console.log('READ N ENTRIES FROM DB'))
+          tap((entries) => console.debug(`READ ${entries.length} ENTRIES FROM DB`))
         )
     )
   );
@@ -75,10 +75,10 @@ export class BoardService {
 
   deleteEntry(boardId: string, entryId: string) {
     const newEntries = [...this.localEntriesState.value];
-    newEntries.splice(
-      newEntries.findIndex((e) => e.id == entryId),
-      1
-    );
+    const idx = newEntries.findIndex((e) => e.id == entryId);
+    if (idx !== -1) {
+      newEntries.splice(idx, 1);
+    }
     this.localEntriesState.next(newEntries); // optimistic update, so app feels more responsive
     this.boardsCollection
       .doc<RetroBoard>(boardId)
@@ -99,6 +99,13 @@ export class BoardService {
   }
 
   unlikeEntry(boardId: string, entryId: string, username: string) {
+    const newEntries = [...this.localEntriesState.value];
+    const entry = newEntries[newEntries.findIndex((e) => e.id == entryId)];
+    const idx = entry.likes.findIndex((name) => name === username);
+    if (idx !== -1) {
+      entry.likes.splice(idx, 1);
+    }
+    this.localEntriesState.next(newEntries); // optimistic update, so app feels more responsive
     this.boardsCollection
       .doc<RetroBoard>(boardId)
       .collection('entries')

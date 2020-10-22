@@ -14,6 +14,8 @@ import { environment } from '../environments/environment';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFireFunctionsModule, REGION } from '@angular/fire/functions';
 import { AboutModalComponent } from './about-modal/about-modal.component';
+import { AngularFirePerformanceModule } from '@angular/fire/performance';
+import { AngularFireAnalyticsModule, ScreenTrackingService } from '@angular/fire/analytics';
 
 @NgModule({
   declarations: [AppComponent, AboutModalComponent],
@@ -26,6 +28,8 @@ import { AboutModalComponent } from './about-modal/about-modal.component';
     AngularFirestoreModule,
     AngularFireFunctionsModule,
     AppRoutingModule,
+    AngularFirePerformanceModule,
+    AngularFireAnalyticsModule,
   ],
   providers: [
     StatusBar,
@@ -35,6 +39,7 @@ import { AboutModalComponent } from './about-modal/about-modal.component';
       useClass: IonicRouteStrategy,
     },
     { provide: REGION, useValue: 'europe-west1' },
+    ScreenTrackingService,
   ],
   bootstrap: [AppComponent],
 })
