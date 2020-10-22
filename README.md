@@ -6,6 +6,12 @@ A fresh app for collaborative, agile retrospectives.
 
 ![deploy](https://github.com/patricsteiner/retronyx/workflows/deploy/badge.svg)
 
+## Get Started
+
+1. Install ionic `npm install -g @ionic/cli`
+2. Install dependencies `npm install`
+3. Run the app `ionic serve`
+
 ## TODO
 
 - [x] Reduce DB reads (e.g. readmodel for public boards, or just remove public boards)
