@@ -28,8 +28,13 @@
 <ion-content [fullscreen]="false">
   <ion-grid *ngIf="board$ | async as board; else noBoard">
     <ion-row>
-      <ion-col size="12" size-md="6" *ngFor="let i of cardIndexes$ | async">
-        <app-retro-card [retroCard]="board.cards[i]" [cardIdx]="i" [boardId]="board.id"></app-retro-card>
+      <ion-col size="12" size-md="6" *ngFor="let card of board.cards; let i = index">
+        <app-retro-card
+          [retroCard]="board.cards[i]"
+          [entries]="entriesForCard(i) | async"
+          [cardIdx]="i"
+          [boardId]="board.id"
+        ></app-retro-card>
       </ion-col>
     </ion-row>
   </ion-grid>

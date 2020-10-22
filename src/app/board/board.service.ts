@@ -1,10 +1,13 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { RetroBoard, RetroCardItem } from './model';
-import { filter, tap } from 'rxjs/operators';
+import { BehaviorSubject, ReplaySubject } from 'rxjs';
+import { RetroBoard, RetroBoardEntry } from './model';
+import { filter, switchMap, tap } from 'rxjs/operators';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { UserService } from '../user.service';
+import * as firebase from 'firebase/app';
+import FieldValue = firebase.firestore.FieldValue;
+import Timestamp = firebase.firestore.Timestamp;
 
 const BOARDS_COLLECTION_NAME = 'boards';
 
@@ -12,68 +15,128 @@ const BOARDS_COLLECTION_NAME = 'boards';
   providedIn: 'root',
 })
 export class BoardService {
+  readonly boardIdSubject = new ReplaySubject<string>(1);
   private readonly boardsCollection = this.firestore.collection<RetroBoard>(BOARDS_COLLECTION_NAME);
 
+  private readonly localBoardState = new BehaviorSubject<RetroBoard>(null);
+  private readonly remoteBoardChanges$ = this.boardIdSubject.pipe(
+    switchMap((id) =>
+      this.boardsCollection
+        .doc<RetroBoard>(id)
+        .valueChanges()
+        .pipe(
+          filter((value) => !!value),
+          tap((it) => (it.id = id)),
+          tap(() => console.log('READ 1 BOARD FROM DB'))
+        )
+    )
+  );
+
+  private readonly localEntriesState = new BehaviorSubject<RetroBoardEntry[]>([]);
+  private readonly remoteEntriesChanges$ = this.boardIdSubject.pipe(
+    switchMap((id) =>
+      this.boardsCollection
+        .doc<RetroBoard>(id)
+        .collection<RetroBoardEntry>('entries')
+        .valueChanges({ idField: 'id' })
+        .pipe(
+          filter((value) => !!value),
+          tap(() => console.log('READ N ENTRIES FROM DB'))
+        )
+    )
+  );
+
+  readonly board$ = this.localBoardState.asObservable();
+
+  readonly entries$ = this.localEntriesState.asObservable();
+
   constructor(
-    private firestore: AngularFirestore,
-    private functions: AngularFireFunctions,
-    private userService: UserService
-  ) {}
-
-  getBoard$(id: string): Observable<RetroBoard> {
-    return this.boardsCollection
-      .doc<RetroBoard>(id)
-      .valueChanges()
-      .pipe(
-        filter((value) => !!value),
-        tap((it) => (it.id = id)),
-        tap(() => console.log('READ 1 FROM DB'))
-      );
+    private readonly firestore: AngularFirestore,
+    private readonly functions: AngularFireFunctions,
+    private readonly userService: UserService
+  ) {
+    this.remoteBoardChanges$.subscribe(this.localBoardState);
+    this.remoteEntriesChanges$.subscribe(this.localEntriesState);
   }
 
-  // NOTE: To be able to always trust an index, we can never delete array entries! Only mark them as deleted.
-  addItem(boardId: string, cardIdx: number, item: RetroCardItem) {
-    const addItemFunction = this.functions.httpsCallable('addItem');
-    addItemFunction({ boardId, cardIdx, item });
+  addEntry(boardId: string, entry: RetroBoardEntry) {
+    const existingSameEntry = this.localEntriesState.value.find(
+      (e) => e.text === entry.text && e.cardIdx === entry.cardIdx
+    );
+    if (existingSameEntry) {
+      this.likeEntry(boardId, existingSameEntry.id, entry.user);
+      return;
+    }
+    const newEntries = [...this.localEntriesState.value];
+    newEntries.push(entry);
+    this.localEntriesState.next(newEntries); // optimistic update, so app feels more responsive
+    this.boardsCollection.doc<RetroBoard>(boardId).collection<RetroBoardEntry>('entries').add(entry);
   }
 
-  deleteItem(boardId: string, cardIdx: number, itemIdx: number) {
-    const deleteItemFunction = this.functions.httpsCallable('deleteItem');
-    deleteItemFunction({ boardId, cardIdx, itemIdx });
+  deleteEntry(boardId: string, entryId: string) {
+    const newEntries = [...this.localEntriesState.value];
+    newEntries.splice(
+      newEntries.findIndex((e) => e.id == entryId),
+      1
+    );
+    this.localEntriesState.next(newEntries); // optimistic update, so app feels more responsive
+    this.boardsCollection
+      .doc<RetroBoard>(boardId)
+      .collection('entries')
+      .doc<RetroBoardEntry>(entryId)
+      .update({ deleted: true });
   }
 
-  likeItem(boardId: string, cardIdx: number, itemIdx: number, username: string) {
-    const likeItemFunction = this.functions.httpsCallable('likeItem');
-    likeItemFunction({ boardId, cardIdx, itemIdx, username });
+  likeEntry(boardId: string, entryId: string, username: string) {
+    const newEntries = [...this.localEntriesState.value];
+    newEntries[newEntries.findIndex((e) => e.id == entryId)].likes.push(username);
+    this.localEntriesState.next(newEntries); // optimistic update, so app feels more responsive
+    this.boardsCollection
+      .doc<RetroBoard>(boardId)
+      .collection('entries')
+      .doc<RetroBoardEntry>(entryId)
+      .update({ likes: (FieldValue.arrayUnion(username) as unknown) as string[] });
   }
 
-  unlikeItem(boardId: string, cardIdx: number, itemIdx: number, username: string) {
-    const unlikeItemFunction = this.functions.httpsCallable('unlikeItem');
-    unlikeItemFunction({ boardId, cardIdx, itemIdx, username });
+  unlikeEntry(boardId: string, entryId: string, username: string) {
+    this.boardsCollection
+      .doc<RetroBoard>(boardId)
+      .collection('entries')
+      .doc<RetroBoardEntry>(entryId)
+      .update({ likes: (FieldValue.arrayRemove(username) as unknown) as string[] });
   }
 
-  flagItem(boardId: string, cardIdx: number, itemIdx: number) {
-    const flagItemFunction = this.functions.httpsCallable('flagItem');
-    flagItemFunction({ boardId, cardIdx, itemIdx });
+  flagEntry(boardId: string, entryId: string) {
+    this.boardsCollection
+      .doc<RetroBoard>(boardId)
+      .collection('entries')
+      .doc<RetroBoardEntry>(entryId)
+      .update({ flag: true });
   }
 
-  unflagItem(boardId: string, cardIdx: number, itemIdx: number) {
-    const unflagItemFunction = this.functions.httpsCallable('unflagItem');
-    unflagItemFunction({ boardId, cardIdx, itemIdx });
+  unflagEntry(boardId: string, entryId: string) {
+    this.boardsCollection
+      .doc<RetroBoard>(boardId)
+      .collection('entries')
+      .doc<RetroBoardEntry>(entryId)
+      .update({ flag: false });
   }
 
   updateCardTitle(boardId: string, cardIdx: number, title: string, emoji: string) {
     title = title.substring(0, 50);
     emoji = emoji.substring(0, 4);
-    const updateCardTitleFunction = this.functions.httpsCallable('updateCardTitle');
-    updateCardTitleFunction({ boardId, cardIdx, title, emoji });
+    const newBoard = { ...this.localBoardState.value };
+    newBoard.cards[cardIdx].title = title;
+    newBoard.cards[cardIdx].emoji = emoji;
+    this.localBoardState.next(newBoard); // optimistic update, so app feels more responsive
+    this.boardsCollection.doc<RetroBoard>(boardId).update(newBoard);
   }
 
   async createNewBoard(title: string, template: string) {
     title = title.substring(0, 100);
     const user = await this.userService.currentUser();
     const board = new RetroBoard(title, user, template);
-    return this.boardsCollection.add({ ...board });
+    return this.boardsCollection.add({ ...board, createdAt: FieldValue.serverTimestamp() as Timestamp });
   }
 
   // async deleteBoard(id: string) {

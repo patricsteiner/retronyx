@@ -3,6 +3,7 @@ import { adminSdk, REGION } from '../init';
 
 const db = adminSdk.firestore();
 
+// just here as an example
 export const likeItemFunction = functions.region(REGION).https.onCall(async (data: LikeItemData, context) => {
   const boardRef = db.collection('boards').doc(data.boardId);
 

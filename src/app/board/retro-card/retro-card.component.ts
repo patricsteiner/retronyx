@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { RetroCard, RetroCardItem } from '../model';
+import { ChangeDetectionStrategy, Component, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
+import { RetroBoardEntry, RetroCard } from '../model';
 import { UserService } from '../../user.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -12,17 +12,20 @@ import { AlertController } from '@ionic/angular';
   styleUrls: ['./retro-card.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class RetroCardComponent implements OnInit, OnDestroy {
+export class RetroCardComponent implements OnInit, OnDestroy, OnChanges {
+  @Input()
+  retroCard: RetroCard;
+
+  @Input()
+  entries: RetroBoardEntry[];
+
   @Input()
   boardId: string; // TODO fix, this is ugly
 
   @Input()
   cardIdx: number; // TODO fix, this is ugly
 
-  @Input()
-  retroCard: RetroCard;
-
-  itemText: string;
+  entryText: string;
 
   username: string;
 
@@ -31,8 +34,7 @@ export class RetroCardComponent implements OnInit, OnDestroy {
   constructor(
     private userService: UserService,
     private retroBoardService: BoardService,
-    private alertController: AlertController,
-    private changeDetectorRef: ChangeDetectorRef
+    private alertController: AlertController
   ) {}
 
   ngOnInit() {
@@ -41,68 +43,57 @@ export class RetroCardComponent implements OnInit, OnDestroy {
     });
   }
 
+  ngOnChanges() {
+    this.entries.sort((a, b) => {
+      if (a.position !== undefined && b.position !== undefined) return a.position - b.position;
+      else return 99999;
+    });
+  }
+
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
   }
 
-  toggleLike(itemIdx: number) {
-    if (this.retroCard.items[itemIdx].likes.includes(this.username)) {
-      this.unlike(itemIdx);
+  toggleLike(entryId: string) {
+    if (this.entries.find((e) => e.id === entryId)?.likes.includes(this.username)) {
+      this.retroBoardService.unlikeEntry(this.boardId, entryId, this.username);
     } else {
-      this.like(itemIdx);
+      this.retroBoardService.likeEntry(this.boardId, entryId, this.username);
     }
   }
 
-  like(itemIdx: number) {
-    this.retroCard.items[itemIdx].likes.push(this.username); // TODO refactor, this is just here so it visually updates immediately.
-    this.retroBoardService.likeItem(this.boardId, this.cardIdx, itemIdx, this.username);
+  private addEntry(item: RetroBoardEntry) {
+    this.retroBoardService.addEntry(this.boardId, item);
   }
 
-  unlike(itemIdx: number) {
-    this.retroCard.items[itemIdx].likes = this.retroCard.items[itemIdx].likes.filter((n) => n !== this.username); // TODO refactor, this is just here so it visually updates immediately.
-    this.retroBoardService.unlikeItem(this.boardId, this.cardIdx, itemIdx, this.username);
-  }
-
-  private addItem(item: RetroCardItem) {
-    const duplicateIdx = this.retroCard.items.findIndex((i) => i.text === item.text && !i.deleted);
-    if (duplicateIdx > -1) {
-      if (!this.retroCard.items[duplicateIdx].likes.includes(this.username)) {
-        this.like(duplicateIdx);
-      }
-    } else {
-      this.retroCard.items.push(item); // TODO refactor, this is just here so it visually updates immediately.
-      this.retroBoardService.addItem(this.boardId, this.cardIdx, item);
-    }
-  }
-
-  deleteItem(itemIdx: number) {
-    this.retroCard.items.splice(itemIdx, 1); // TODO refactor, this is just here so it visually updates immediately.
-    this.retroBoardService.deleteItem(this.boardId, this.cardIdx, itemIdx);
+  deleteItem(entryId: string) {
+    this.retroBoardService.deleteEntry(this.boardId, entryId);
   }
 
   submit() {
-    this.itemText = this.itemText.trim();
-    if (this.itemText) {
-      this.addItem({ text: this.itemText, user: this.username, likes: [] });
-      this.itemText = '';
+    this.entryText = this.entryText.trim();
+    if (this.entryText) {
+      this.addEntry({
+        text: this.entryText,
+        user: this.username,
+        likes: [],
+        cardIdx: this.cardIdx,
+        position: this.entries.length,
+      });
+      this.entryText = '';
     }
   }
 
-  toggleFlag(itemIdx: number) {
-    if (this.retroCard.items[itemIdx].flag) {
-      this.retroCard.items[itemIdx].flag = false; // TODO refactor, this is just here so it visually updates immediately.
-      this.retroBoardService.unflagItem(this.boardId, this.cardIdx, itemIdx);
+  toggleFlag(entryId: string) {
+    if (this.entries.find((e) => e.id === entryId)?.flag) {
+      this.retroBoardService.unflagEntry(this.boardId, entryId);
     } else {
-      this.retroCard.items[itemIdx].flag = true; // TODO refactor, this is just here so it visually updates immediately.
-      this.retroBoardService.flagItem(this.boardId, this.cardIdx, itemIdx);
+      this.retroBoardService.flagEntry(this.boardId, entryId);
     }
   }
 
   updateCardTitle(title: string, emoji: string) {
-    this.retroCard.title = title; // TODO refactor, this is just here so it visually updates immediately.
-    this.retroCard.emoji = emoji.substring(0, 4); // TODO refactor, this is just here so it visually updates immediately.
-    this.changeDetectorRef.detectChanges();
     this.retroBoardService.updateCardTitle(this.boardId, this.cardIdx, title, emoji);
   }
 

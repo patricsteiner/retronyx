@@ -6,10 +6,18 @@ service cloud.firestore {
       allow read, write: if false;
     }
 
-    match /boards/{any} {
+    match /boards/{boardId} {
       allow read: if true;
-      allow write: if true;
+      allow create: if true;
+      allow update: if true;
+      allow delete: if false;
     }
 
+    match /boards/{boardId}/entries/{entryId} {
+      allow read: if true;
+      allow create: if true;
+      allow update: if true;
+      allow delete: if false;
+    }
   }
 }

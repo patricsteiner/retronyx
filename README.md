@@ -11,12 +11,13 @@ A fresh app for collaborative, agile retrospectives.
 - [x] Reduce DB reads (e.g. readmodel for public boards, or just remove public boards)
 - [x] Avoid empty strings as titles/names
 - [x] Disallow deletion of a board (because there is no (and there shall not be) login/RBAC) --> Assume it to be well-behaved (inside a board)
-- [ ] Nicer "no board selected" page
-- [ ] Add timestamps to items (cuz why not)
+- [x] Nicer "no board selected" page
+- [x] Add timestamps to items (cuz why not) --> nvm, use positions instead, becuase cannot rely on client timestamps (and server timestamps are slower)
 - [ ] improve like visibility
-- [ ] Split the board items to its own subcollection -> non-transactional DB writes are faster and do not necessarily require cloud functions
+- [ ] database rules (i.e. deny delete)
+- [x] Split the board items to its own subcollection -> non-transactional DB writes are faster and do not necessarily require cloud functions
 - [x] Remove service worker/PWA capabilities. Or at least assure new versions are fetched on time
-- [ ] Implement a service/store for optimistic db writes and cached reads (currently rather ugly workaround in the code, marked as TODO)
+- [x] Implement a service/store for optimistic db writes and cached reads (currently rather ugly workaround in the code, marked as TODO)
 
 ## Potential features
 

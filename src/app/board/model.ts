@@ -2,36 +2,35 @@
 import Timestamp = firebase.firestore.Timestamp;
 
 export class RetroBoard {
-  id: string;
-  createdAt: Date | Timestamp;
+  id?: string;
+  createdAt?: Timestamp;
   createdBy: string;
   title: string;
   cards: RetroCard[];
 
   constructor(title: string, createdBy: string, template: string) {
     this.title = title;
-    this.createdAt = new Date();
     this.createdBy = createdBy;
     if (template.toLowerCase() === 'de') {
       this.cards = [
-        { emoji: '😃', title: 'Positives', items: [] },
-        { emoji: '😥', title: 'Negatives', items: [] },
-        { emoji: '💡', title: 'Ideen', items: [] },
-        { emoji: '🌷', title: 'Dankeschön', items: [] },
+        { emoji: '😃', title: 'Positives' },
+        { emoji: '😥', title: 'Negatives' },
+        { emoji: '💡', title: 'Ideen' },
+        { emoji: '🌷', title: 'Dankeschön' },
       ];
     } else if (template.toLowerCase() === 'ch') {
       this.cards = [
-        { emoji: '😃', title: 'Das isch super gsi!', items: [] },
-        { emoji: '😥', title: 'Hät chönne besser loufe', items: [] },
-        { emoji: '💡', title: 'Ideeä', items: [] },
-        { emoji: '🌷', title: 'Und es Merci geit a...', items: [] },
+        { emoji: '😃', title: 'Das isch super gsi!' },
+        { emoji: '😥', title: 'Hät chönne besser loufe' },
+        { emoji: '💡', title: 'Ideeä' },
+        { emoji: '🌷', title: 'Und es Merci geit a...' },
       ];
     } else {
       this.cards = [
-        { emoji: '😃', title: 'What went well?', items: [] },
-        { emoji: '😥', title: 'What could be improved?', items: [] },
-        { emoji: '💡', title: 'Ideas', items: [] },
-        { emoji: '🌷', title: 'Thank you', items: [] },
+        { emoji: '😃', title: 'What went well?' },
+        { emoji: '😥', title: 'What could be improved?' },
+        { emoji: '💡', title: 'Ideas' },
+        { emoji: '🌷', title: 'Thank you' },
       ];
     }
   }
@@ -40,13 +39,15 @@ export class RetroBoard {
 export interface RetroCard {
   title: string;
   emoji: string;
-  items: RetroCardItem[];
 }
 
-export interface RetroCardItem {
+export interface RetroBoardEntry {
+  id?: string;
+  position?: number;
+  cardIdx: number;
   text: string;
   likes: string[];
-  user?: string;
+  user: string;
   flag?: boolean;
   deleted?: boolean;
 }

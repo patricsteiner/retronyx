@@ -18,18 +18,18 @@
   </ion-card-header>
   <ion-card-content>
     <ion-list>
-      <ion-item-sliding *ngFor="let item of retroCard.items; let itemIdx = index" #slidingItem>
-        <ion-item *ngIf="!item.deleted">
-          <ion-chip class="user" [ngStyle]="{ background: item.user | colorHash }">
-            <ion-label [ngStyle]="{ color: item.user | colorHash: true }" title="{{ item.user || 'Unknown' }}">{{
-              item.user || 'Unknown'
+      <ion-item-sliding *ngFor="let entry of entries" #slidingItem>
+        <ion-item *ngIf="!entry.deleted">
+          <ion-chip class="user" [ngStyle]="{ background: entry.user | colorHash }">
+            <ion-label [ngStyle]="{ color: entry.user | colorHash: true }" title="{{ entry.user || 'Unknown' }}">{{
+              entry.user || 'Unknown'
             }}</ion-label>
           </ion-chip>
-          <ion-label class="ion-text-wrap item">{{ item.text }}</ion-label>
-          <ion-icon *ngIf="item.flag" name="flag" color="danger"></ion-icon>
-          <ion-chip class="likes" outline="true" (click)="toggleLike(itemIdx)" [title]="item.likes">
-            <ion-label>{{ item.likes.length }}</ion-label>
-            <ng-container *ngIf="item.likes.includes(username); then heart; else heartOutline"></ng-container>
+          <ion-label class="ion-text-wrap item">{{ entry.text }}</ion-label>
+          <ion-icon *ngIf="entry.flag" name="flag" color="danger"></ion-icon>
+          <ion-chip class="likes" outline="true" (click)="toggleLike(entry.id)" [title]="entry.likes">
+            <ion-label>{{ entry.likes.length }}</ion-label>
+            <ng-container *ngIf="entry.likes.includes(username); then heart; else heartOutline"></ng-container>
             <ng-template #heart>
               <ion-icon name="heart" color="danger"></ion-icon>
             </ng-template>
@@ -39,13 +39,13 @@
           </ion-chip>
         </ion-item>
         <ion-item-options side="start">
-          <ion-item-option color="light" (click)="toggleFlag(itemIdx); slidingItem.close()">
-            <ion-icon *ngIf="item.flag" slot="icon-only" name="flag-outline"></ion-icon>
-            <ion-icon *ngIf="!item.flag" slot="icon-only" name="flag"></ion-icon>
+          <ion-item-option color="light" (click)="toggleFlag(entry.id); slidingItem.close()">
+            <ion-icon *ngIf="entry.flag" slot="icon-only" name="flag-outline"></ion-icon>
+            <ion-icon *ngIf="!entry.flag" slot="icon-only" name="flag"></ion-icon>
           </ion-item-option>
         </ion-item-options>
         <ion-item-options side="end">
-          <ion-item-option color="danger" (click)="deleteItem(itemIdx)">
+          <ion-item-option color="danger" (click)="deleteItem(entry.id)">
             <ion-icon slot="icon-only" name="trash"></ion-icon>
           </ion-item-option>
         </ion-item-options>
@@ -53,7 +53,7 @@
       <ion-item>
         <ion-input
           placeholder="Add entry..."
-          [(ngModel)]="itemText"
+          [(ngModel)]="entryText"
           (keydown.enter)="submit()"
           maxlength="200"
           minlength="2"
@@ -63,7 +63,7 @@
           slot="end"
           color="primary"
           size="small"
-          [disabled]="!itemText || itemText.trim().length === 0"
+          [disabled]="!entryText || entryText.trim().length === 0"
           (click)="submit()"
         >
           <ion-icon name="add"></ion-icon>

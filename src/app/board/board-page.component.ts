@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { RetroBoard } from './model';
+import { RetroBoard, RetroBoardEntry } from './model';
 import { BoardService } from './board.service';
 import { AlertController, ModalController, NavController } from '@ionic/angular';
 import { ActivatedRoute } from '@angular/router';
-import { filter, map, shareReplay, switchMap, take } from 'rxjs/operators';
+import { filter, map, take } from 'rxjs/operators';
 import { UserService } from '../user.service';
 import { NewBoardModalComponent } from './new-board-modal/new-board-modal.component';
 import { AboutModalComponent } from '../about-modal/about-modal.component';
@@ -15,15 +15,9 @@ import { AboutModalComponent } from '../about-modal/about-modal.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BoardPage implements OnInit {
-  board$: Observable<RetroBoard> = this.route.paramMap
-    .pipe(
-      map((params) => params.get('id')),
-      filter((id) => !!id),
-      switchMap((id) => this.retroBoardService.getBoard$(id))
-    )
-    .pipe(shareReplay({ bufferSize: 1, refCount: true }));
-  username$ = this.userService.username$;
-  cardIndexes$ = this.board$.pipe(map((board) => board.cards.map((card, i) => i)));
+  board$: Observable<RetroBoard> = this.retroBoardService.board$;
+  entries$: Observable<RetroBoardEntry[]> = this.retroBoardService.entries$;
+  username$: Observable<string> = this.userService.username$;
 
   constructor(
     private retroBoardService: BoardService,
@@ -32,12 +26,23 @@ export class BoardPage implements OnInit {
     private navCtrl: NavController,
     private userService: UserService,
     public modalController: ModalController
-  ) {}
+  ) {
+    this.route.paramMap
+      .pipe(
+        map((params) => params.get('id')),
+        filter((id) => !!id)
+      )
+      .subscribe(this.retroBoardService.boardIdSubject);
+  }
 
   async ngOnInit() {
     if (!(await this.userService.currentUser())) {
       this.showLoginPopup();
     }
+  }
+
+  entriesForCard(cardIdx: number): Observable<RetroBoardEntry[]> {
+    return this.entries$.pipe(map((entries) => entries.filter((entry) => entry.cardIdx === cardIdx)));
   }
 
   async showLoginPopup() {
