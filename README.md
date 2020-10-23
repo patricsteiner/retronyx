@@ -1,6 +1,6 @@
 # OnyxRetro
 
-A fresh app for collaborative, agile retrospectives.
+A fresh app for online retrospectives.
 
 [onyxretro.web.app](https://onyxretro.web.app)
 
