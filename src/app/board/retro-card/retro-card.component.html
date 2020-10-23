@@ -18,7 +18,7 @@
   </ion-card-header>
   <ion-card-content>
     <ion-list>
-      <ion-item-sliding *ngFor="let entry of entries" #slidingItem>
+      <ion-item-sliding *ngFor="let entry of entries" #slidingItem (contextmenu)="showHint($event)">
         <ion-item *ngIf="!entry.deleted">
           <ion-chip class="user" [ngStyle]="{ background: entry.user | colorHash }">
             <ion-label [ngStyle]="{ color: entry.user | colorHash: true }" title="{{ entry.user || 'Unknown' }}">{{
