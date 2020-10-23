@@ -6,3 +6,7 @@
 :host-context {
   --backdrop-opacity: 0;
 }
+
+ion-card {
+  overflow: auto;
+}
