@@ -89,7 +89,10 @@ export class BoardService {
 
   likeEntry(boardId: string, entryId: string, username: string) {
     const newEntries = [...this.localEntriesState.value];
-    newEntries[newEntries.findIndex((e) => e.id == entryId)].likes.push(username);
+    const likes = newEntries[newEntries.findIndex((e) => e.id == entryId)].likes;
+    if (likes.findIndex((u) => u === username) === -1) {
+      likes.push(username);
+    }
     this.localEntriesState.next(newEntries); // optimistic update, so app feels more responsive
     this.boardsCollection
       .doc<RetroBoard>(boardId)
