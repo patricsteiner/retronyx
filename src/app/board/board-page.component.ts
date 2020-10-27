@@ -4,7 +4,7 @@ import { RetroBoard, RetroBoardEntry } from './model';
 import { BoardService } from './board.service';
 import { AlertController, ModalController, NavController } from '@ionic/angular';
 import { ActivatedRoute } from '@angular/router';
-import { filter, map, take } from 'rxjs/operators';
+import { filter, map, take, tap } from 'rxjs/operators';
 import { UserService } from '../user.service';
 import { NewBoardModalComponent } from './new-board-modal/new-board-modal.component';
 import { AboutModalComponent } from '../about-modal/about-modal.component';
@@ -30,16 +30,17 @@ export class BoardPage implements OnInit {
     this.route.paramMap
       .pipe(
         map((params) => params.get('id')),
-        filter((id) => !!id)
+        filter((id) => !!id),
+        tap(async () => {
+          if (!(await this.userService.currentUser())) {
+            this.showLoginPopup();
+          }
+        })
       )
       .subscribe(this.retroBoardService.boardIdSubject);
   }
 
-  async ngOnInit() {
-    if (!(await this.userService.currentUser())) {
-      this.showLoginPopup();
-    }
-  }
+  ngOnInit() {}
 
   entriesForCard(cardIdx: number): Observable<RetroBoardEntry[]> {
     return this.entries$.pipe(map((entries) => entries.filter((entry) => entry.cardIdx === cardIdx)));
