@@ -38,6 +38,33 @@
   </ion-grid>
 </ion-content>
 
+<ion-footer *ngIf="board$ | async as board">
+  <ion-toolbar>
+    <div id="users">
+      <ion-chip
+        class="user"
+        *ngFor="let participant of participants$ | async"
+        [ngStyle]="{ background: participant.user.id | colorHash }"
+        [class.done]="participant.done"
+        title="{{ participant.user.name }}"
+      >
+        <span [ngStyle]="{ color: participant.user.id | colorHash: true }">{{
+          participant.user.name.substring(0, 1).toUpperCase()
+        }}</span>
+      </ion-chip>
+    </div>
+    <ion-buttons slot="end">
+      <ion-button *ngIf="!(isDone$ | async)" color="success" fill="solid" (click)="setDone(board.id, true)">
+        <ion-label>Done</ion-label>
+        <!--        <ion-icon name="checkmark-circle-outline"></ion-icon>-->
+      </ion-button>
+      <ion-button *ngIf="isDone$ | async" color="medium" fill="clear" (click)="setDone(board.id, false)">
+        <ion-label>Not done</ion-label>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-footer>
+
 <ng-template #noBoard>
   <app-landing></app-landing>
 </ng-template>

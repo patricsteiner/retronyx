@@ -6,6 +6,11 @@ export interface User {
   name: string;
 }
 
+export interface Participant {
+  user: User;
+  done?: boolean;
+}
+
 export class RetroBoard {
   id?: string;
   createdAt?: Timestamp;

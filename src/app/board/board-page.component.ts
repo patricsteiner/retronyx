@@ -1,10 +1,10 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
-import { RetroBoard, RetroBoardEntry, User } from './model';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
+import { combineLatest, Observable, Subject } from 'rxjs';
+import { Participant, RetroBoard, RetroBoardEntry, User } from './model';
 import { BoardService } from './board.service';
 import { AlertController, ModalController, NavController } from '@ionic/angular';
 import { ActivatedRoute } from '@angular/router';
-import { filter, map, tap } from 'rxjs/operators';
+import { filter, map, takeUntil, tap } from 'rxjs/operators';
 import { AuthService } from '../auth.service';
 import { NewBoardModalComponent } from './new-board-modal/new-board-modal.component';
 import { AboutModalComponent } from '../about-modal/about-modal.component';
@@ -14,18 +14,28 @@ import { AboutModalComponent } from '../about-modal/about-modal.component';
   styleUrls: ['board-page.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class BoardPage implements OnInit {
-  board$: Observable<RetroBoard> = this.retroBoardService.board$;
-  entries$: Observable<RetroBoardEntry[]> = this.retroBoardService.entries$;
+export class BoardPage implements OnInit, OnDestroy {
+  board$: Observable<RetroBoard> = this.boardService.board$;
+  entries$: Observable<RetroBoardEntry[]> = this.boardService.entries$;
+  participants$: Observable<Participant[]> = this.boardService.participants$;
   user$: Observable<User> = this.userService.user$;
+  isDone$: Observable<boolean> = combineLatest([this.participants$, this.user$]).pipe(
+    filter(([participants, user]) => !!participants && !!user),
+    map(([participants, user]) => {
+      const participant = participants.find((p) => p.user.id === user.id);
+      return participant?.done;
+    })
+  );
+
+  destroy$ = new Subject();
 
   constructor(
-    private retroBoardService: BoardService,
+    private boardService: BoardService,
     private alertController: AlertController,
     private route: ActivatedRoute,
     private navCtrl: NavController,
     private userService: AuthService,
-    public modalController: ModalController
+    private modalController: ModalController
   ) {
     this.route.paramMap
       .pipe(
@@ -37,10 +47,23 @@ export class BoardPage implements OnInit {
           }
         })
       )
-      .subscribe(this.retroBoardService.boardIdSubject);
+      .subscribe(this.boardService.boardIdSubject);
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    combineLatest([this.board$, this.user$])
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(([board, user]) => {
+        if (!!board && !!user && user.name) {
+          this.boardService.addOrSetParticipant(board.id, { user });
+        }
+      });
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 
   entriesForCard(cardIdx: number): Observable<RetroBoardEntry[]> {
     return this.entries$.pipe(map((entries) => entries.filter((entry) => entry.cardIdx === cardIdx)));
@@ -88,5 +111,12 @@ export class BoardPage implements OnInit {
       cssClass: 'about-modal',
     });
     await modal.present();
+  }
+
+  async setDone(boardId: string, done: boolean) {
+    const user = await this.userService.currentUser();
+    if (!!user) {
+      this.boardService.addOrSetParticipant(boardId, { user, done });
+    }
   }
 }

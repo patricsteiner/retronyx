@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, ReplaySubject } from 'rxjs';
-import { RetroBoard, RetroBoardEntry } from './model';
+import { Participant, RetroBoard, RetroBoardEntry } from './model';
 import { filter, switchMap, tap } from 'rxjs/operators';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AngularFireFunctions } from '@angular/fire/functions';
@@ -9,14 +9,12 @@ import * as firebase from 'firebase/app';
 import FieldValue = firebase.firestore.FieldValue;
 import Timestamp = firebase.firestore.Timestamp;
 
-const BOARDS_COLLECTION_NAME = 'boards';
-
 @Injectable({
   providedIn: 'root',
 })
 export class BoardService {
   readonly boardIdSubject = new ReplaySubject<string>(1);
-  private readonly boardsCollection = this.firestore.collection<RetroBoard>(BOARDS_COLLECTION_NAME);
+  private readonly boardsCollection = this.firestore.collection<RetroBoard>('boards');
 
   private readonly localBoardState = new BehaviorSubject<RetroBoard>(null);
   private readonly remoteBoardChanges$ = this.boardIdSubject.pipe(
@@ -46,9 +44,23 @@ export class BoardService {
     )
   );
 
-  readonly board$ = this.localBoardState.asObservable();
+  private readonly localParticipantsState = new BehaviorSubject<Participant[]>([]);
+  private readonly remoteParticipantsChanges$ = this.boardIdSubject.pipe(
+    switchMap((id) =>
+      this.boardsCollection
+        .doc<RetroBoard>(id)
+        .collection<Participant>('participants')
+        .valueChanges({ idField: 'id' })
+        .pipe(
+          filter((value) => !!value),
+          tap((participants) => console.debug(`READ ${participants.length} PARTICIPANTS FROM DB`, participants))
+        )
+    )
+  );
 
+  readonly board$ = this.localBoardState.asObservable();
   readonly entries$ = this.localEntriesState.asObservable();
+  readonly participants$ = this.localParticipantsState.asObservable();
 
   constructor(
     private readonly firestore: AngularFirestore,
@@ -57,6 +69,7 @@ export class BoardService {
   ) {
     this.remoteBoardChanges$.subscribe(this.localBoardState);
     this.remoteEntriesChanges$.subscribe(this.localEntriesState);
+    this.remoteParticipantsChanges$.subscribe(this.localParticipantsState);
   }
 
   addEntry(boardId: string, entry: RetroBoardEntry) {
@@ -153,5 +166,13 @@ export class BoardService {
     const user = await this.userService.currentUser();
     const board = new RetroBoard(title, user, template);
     return this.boardsCollection.add({ ...board, createdAt: FieldValue.serverTimestamp() as Timestamp });
+  }
+
+  addOrSetParticipant(boardId: string, participant: Participant) {
+    this.boardsCollection
+      .doc(boardId)
+      .collection('participants')
+      .doc<Participant>(participant.user.id)
+      .set(participant, { merge: true });
   }
 }

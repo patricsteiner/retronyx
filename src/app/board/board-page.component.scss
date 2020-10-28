@@ -14,6 +14,31 @@ ion-header {
   }
 }
 
+#users {
+  width: 80%;
+  margin: auto;
+  text-align: center;
+  .user {
+    width: 28px;
+    height: 28px;
+    font-size: 80%;
+    padding: 0;
+    &.done {
+      box-shadow: 0 0 3px 3px #32e332;
+    }
+    span {
+      margin: auto;
+    }
+  }
+}
+
+ion-footer {
+  ion-buttons {
+    position: absolute;
+    right: 8px;
+  }
+}
+
 ::ng-deep {
   .alert-sub-title {
     color: red !important;

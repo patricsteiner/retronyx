@@ -19,5 +19,14 @@ service cloud.firestore {
       allow update: if true;
       allow delete: if false;
     }
+
+    match /boards/{boardId}/participants/{userId} {
+      allow read: if true;
+      allow write: if isOwner(userId);
+    }
+
+    function isOwner(userId) {
+      return request.auth != null && request.auth.uid == userId;
+    }
   }
 }
