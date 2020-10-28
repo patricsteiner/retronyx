@@ -60,6 +60,7 @@ export class BoardService {
   }
 
   addEntry(boardId: string, entry: RetroBoardEntry) {
+    entry.text = entry.text.substring(0, 300);
     const existingSameEntry = this.localEntriesState.value.find(
       (e) => e.text === entry.text && e.cardIdx === entry.cardIdx && !e.deleted
     );
@@ -140,6 +141,11 @@ export class BoardService {
     newBoard.cards[cardIdx].emoji = emoji;
     this.localBoardState.next(newBoard); // optimistic update, so app feels more responsive
     this.boardsCollection.doc<RetroBoard>(boardId).update(newBoard);
+  }
+
+  updateEntry(boardId: string, entryId: string, entryText: string) {
+    entryText = entryText.substring(0, 300);
+    this.boardsCollection.doc(boardId).collection('entries').doc<RetroBoardEntry>(entryId).update({ text: entryText });
   }
 
   async createNewBoard(title: string, template: string) {

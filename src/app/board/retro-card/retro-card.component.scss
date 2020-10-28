@@ -19,7 +19,7 @@ ion-card {
   user-select: none;
 }
 
-.item {
+.entry {
   user-select: text;
 }
 
@@ -29,4 +29,12 @@ ion-card {
 
 #submit {
   transform: scale(0.8);
+}
+
+::ng-deep {
+  .editEntryPopup {
+    .alert-wrapper {
+      width: 500px;
+    }
+  }
 }

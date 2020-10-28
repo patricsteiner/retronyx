@@ -27,7 +27,7 @@
               >{{ entry.user?.name || 'Unknown' }}</ion-label
             >
           </ion-chip>
-          <ion-label class="ion-text-wrap item">{{ entry.text }}</ion-label>
+          <ion-label class="ion-text-wrap entry">{{ entry.text }}</ion-label>
           <ion-icon *ngIf="entry.flag" name="flag" color="danger"></ion-icon>
           <ion-chip class="likes" outline="true" (click)="toggleLike(entry.id)" [title]="entry.likes">
             <ion-label>{{ entry.likes.length }}</ion-label>
@@ -47,8 +47,11 @@
           </ion-item-option>
         </ion-item-options>
         <ion-item-options side="end">
-          <ion-item-option color="danger" (click)="deleteItem(entry.id)">
-            <ion-icon slot="icon-only" name="trash"></ion-icon>
+          <ion-item-option color="primary" (click)="showEditEntryPopup(entry.id, entry.text)">
+            <ion-icon slot="icon-only" name="pencil"></ion-icon>
+          </ion-item-option>
+          <ion-item-option color="danger" (click)="deleteEntry(entry.id)">
+            <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
           </ion-item-option>
         </ion-item-options>
       </ion-item-sliding>
@@ -57,7 +60,7 @@
           placeholder="Add entry..."
           [(ngModel)]="entryText"
           (keydown.enter)="submit()"
-          maxlength="200"
+          maxlength="300"
           minlength="2"
         ></ion-input>
         <ion-fab-button

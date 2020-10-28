@@ -70,7 +70,7 @@ export class RetroCardComponent implements OnInit, OnDestroy, OnChanges {
     this.retroBoardService.addEntry(this.boardId, item);
   }
 
-  deleteItem(entryId: string) {
+  deleteEntry(entryId: string) {
     this.retroBoardService.deleteEntry(this.boardId, entryId);
   }
 
@@ -100,10 +100,14 @@ export class RetroCardComponent implements OnInit, OnDestroy, OnChanges {
     this.retroBoardService.updateCardTitle(this.boardId, this.cardIdx, title, emoji);
   }
 
+  updateEntry(entryId: string, entryText: string) {
+    this.retroBoardService.updateEntry(this.boardId, entryId, entryText);
+  }
+
   async showEditCardPopup(title: string, emoji: string) {
     const alertDialog = await this.alertController.create({
       header: 'Adjust card',
-      // subHeader: error,
+      cssClass: 'editCardPopup',
       inputs: [
         {
           name: 'title',
@@ -127,10 +131,46 @@ export class RetroCardComponent implements OnInit, OnDestroy, OnChanges {
         {
           text: 'OK',
           handler: (input) => {
-            if (!input.title || !input.title.trim() || (input.title === title && input.emoji === emoji)) {
+            if (!input.title || !input.title.trim()) {
               return false;
             }
-            this.updateCardTitle(input.title, input.emoji);
+            if (input.title !== title || input.emoji !== emoji) {
+              this.updateCardTitle(input.title, input.emoji);
+            }
+          },
+        },
+      ],
+    });
+    alertDialog.present();
+  }
+
+  async showEditEntryPopup(entryId: string, entryText: string) {
+    const alertDialog = await this.alertController.create({
+      header: 'Edit text',
+      cssClass: 'editEntryPopup',
+      inputs: [
+        {
+          name: 'text',
+          type: 'textarea',
+          placeholder: 'What do you want to tell the world?',
+          value: entryText,
+        },
+      ],
+      buttons: [
+        {
+          text: 'Abort',
+          role: 'cancel',
+          cssClass: 'secondary',
+        },
+        {
+          text: 'OK',
+          handler: (input) => {
+            if (!input.text || !input.text.trim()) {
+              return false;
+            }
+            if (input.text !== entryText) {
+              this.updateEntry(entryId, input.text);
+            }
           },
         },
       ],
