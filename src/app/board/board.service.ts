@@ -4,7 +4,7 @@ import { RetroBoard, RetroBoardEntry } from './model';
 import { filter, switchMap, tap } from 'rxjs/operators';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AngularFireFunctions } from '@angular/fire/functions';
-import { UserService } from '../user.service';
+import { AuthService } from '../auth.service';
 import * as firebase from 'firebase/app';
 import FieldValue = firebase.firestore.FieldValue;
 import Timestamp = firebase.firestore.Timestamp;
@@ -27,7 +27,7 @@ export class BoardService {
         .pipe(
           filter((value) => !!value),
           tap((it) => (it.id = id)),
-          tap(() => console.debug('READ 1 BOARD FROM DB'))
+          tap((board) => console.debug('READ 1 BOARD FROM DB', board))
         )
     )
   );
@@ -41,7 +41,7 @@ export class BoardService {
         .valueChanges({ idField: 'id' })
         .pipe(
           filter((value) => !!value),
-          tap((entries) => console.debug(`READ ${entries.length} ENTRIES FROM DB`))
+          tap((entries) => console.debug(`READ ${entries.length} ENTRIES FROM DB`, entries))
         )
     )
   );
@@ -53,7 +53,7 @@ export class BoardService {
   constructor(
     private readonly firestore: AngularFirestore,
     private readonly functions: AngularFireFunctions,
-    private readonly userService: UserService
+    private readonly userService: AuthService
   ) {
     this.remoteBoardChanges$.subscribe(this.localBoardState);
     this.remoteEntriesChanges$.subscribe(this.localEntriesState);
@@ -61,10 +61,10 @@ export class BoardService {
 
   addEntry(boardId: string, entry: RetroBoardEntry) {
     const existingSameEntry = this.localEntriesState.value.find(
-      (e) => e.text === entry.text && e.cardIdx === entry.cardIdx
+      (e) => e.text === entry.text && e.cardIdx === entry.cardIdx && !e.deleted
     );
     if (existingSameEntry) {
-      this.likeEntry(boardId, existingSameEntry.id, entry.user);
+      this.likeEntry(boardId, existingSameEntry.id, entry.user.name);
       return;
     }
     const newEntries = [...this.localEntriesState.value];
@@ -148,15 +148,4 @@ export class BoardService {
     const board = new RetroBoard(title, user, template);
     return this.boardsCollection.add({ ...board, createdAt: FieldValue.serverTimestamp() as Timestamp });
   }
-
-  // async deleteBoard(id: string) {
-  //   return this.boardsCollection.doc(id).delete();
-  // }
-  //
-  // async deleteAll() {
-  //   const allBoardsQuerySnapshot = await this.boardsCollection.ref.get();
-  //   allBoardsQuerySnapshot.forEach((doc) => {
-  //     doc.ref.delete();
-  //   });
-  // }
 }

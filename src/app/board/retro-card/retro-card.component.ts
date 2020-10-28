@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
-import { RetroBoardEntry, RetroCard } from '../model';
-import { UserService } from '../../user.service';
+import { RetroBoardEntry, RetroCard, User } from '../model';
+import { AuthService } from '../../auth.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { BoardService } from '../board.service';
@@ -27,20 +27,22 @@ export class RetroCardComponent implements OnInit, OnDestroy, OnChanges {
 
   entryText: string;
 
-  username: string;
+  user: User = { id: null, name: null };
 
   destroy$ = new Subject();
 
   constructor(
-    private userService: UserService,
+    private userService: AuthService,
     private retroBoardService: BoardService,
     private alertController: AlertController,
     private toastController: ToastController
   ) {}
 
   ngOnInit() {
-    this.userService.username$.pipe(takeUntil(this.destroy$)).subscribe((username) => {
-      this.username = username;
+    this.userService.user$.pipe(takeUntil(this.destroy$)).subscribe((user) => {
+      if (!!user) {
+        this.user = user;
+      }
     });
   }
 
@@ -57,10 +59,10 @@ export class RetroCardComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   toggleLike(entryId: string) {
-    if (this.entries.find((e) => e.id === entryId)?.likes.includes(this.username)) {
-      this.retroBoardService.unlikeEntry(this.boardId, entryId, this.username);
+    if (this.entries.find((e) => e.id === entryId)?.likes.includes(this.user.name)) {
+      this.retroBoardService.unlikeEntry(this.boardId, entryId, this.user.name);
     } else {
-      this.retroBoardService.likeEntry(this.boardId, entryId, this.username);
+      this.retroBoardService.likeEntry(this.boardId, entryId, this.user.name);
     }
   }
 
@@ -77,7 +79,7 @@ export class RetroCardComponent implements OnInit, OnDestroy, OnChanges {
     if (this.entryText) {
       this.addEntry({
         text: this.entryText,
-        user: this.username,
+        user: this.user,
         likes: [],
         cardIdx: this.cardIdx,
         position: this.entries.length,

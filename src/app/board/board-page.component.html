@@ -13,8 +13,8 @@
         <ion-icon name="add-outline"></ion-icon>
       </ion-button>
       <ion-button color="dark" fill="clear" (click)="showLoginPopup()">
-        <ion-icon *ngIf="username$ | async" name="person"></ion-icon>
-        <ion-icon *ngIf="!(username$ | async)" name="person-outline"></ion-icon>
+        <ion-icon *ngIf="user$ | async" name="person"></ion-icon>
+        <ion-icon *ngIf="!(user$ | async)" name="person-outline"></ion-icon>
       </ion-button>
       <ion-button color="dark" fill="clear" (click)="showAboutModal()">
         <ion-icon name="information-circle-outline"></ion-icon>

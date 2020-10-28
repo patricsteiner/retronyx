@@ -20,16 +20,18 @@
     <ion-list>
       <ion-item-sliding *ngFor="let entry of entries" #slidingItem (contextmenu)="showHint($event)">
         <ion-item *ngIf="!entry.deleted">
-          <ion-chip class="user" [ngStyle]="{ background: entry.user | colorHash }">
-            <ion-label [ngStyle]="{ color: entry.user | colorHash: true }" title="{{ entry.user || 'Unknown' }}">{{
-              entry.user || 'Unknown'
-            }}</ion-label>
+          <ion-chip class="user" [ngStyle]="{ background: entry.user.id | colorHash }">
+            <ion-label
+              [ngStyle]="{ color: entry.user.id | colorHash: true }"
+              title="{{ entry.user?.name || 'Unknown' }}"
+              >{{ entry.user?.name || 'Unknown' }}</ion-label
+            >
           </ion-chip>
           <ion-label class="ion-text-wrap item">{{ entry.text }}</ion-label>
           <ion-icon *ngIf="entry.flag" name="flag" color="danger"></ion-icon>
           <ion-chip class="likes" outline="true" (click)="toggleLike(entry.id)" [title]="entry.likes">
             <ion-label>{{ entry.likes.length }}</ion-label>
-            <ng-container *ngIf="entry.likes.includes(username); then heart; else heartOutline"></ng-container>
+            <ng-container *ngIf="entry.likes.includes(user?.name); then heart; else heartOutline"></ng-container>
             <ng-template #heart>
               <ion-icon name="heart" color="danger"></ion-icon>
             </ng-template>

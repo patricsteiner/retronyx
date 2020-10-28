@@ -3,8 +3,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { RouteReuseStrategy } from '@angular/router';
 
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
-import { SplashScreen } from '@ionic-native/splash-screen/ngx';
-import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { IonicStorageModule } from '@ionic/storage';
 
 import { AppComponent } from './app.component';
@@ -15,7 +13,8 @@ import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFireFunctionsModule, REGION } from '@angular/fire/functions';
 import { AboutModalComponent } from './about-modal/about-modal.component';
 import { AngularFirePerformanceModule } from '@angular/fire/performance';
-import { AngularFireAnalyticsModule, ScreenTrackingService } from '@angular/fire/analytics';
+import { AngularFireAnalyticsModule, ScreenTrackingService, UserTrackingService } from '@angular/fire/analytics';
+import { AngularFireAuthModule } from '@angular/fire/auth';
 
 @NgModule({
   declarations: [AppComponent, AboutModalComponent],
@@ -30,16 +29,19 @@ import { AngularFireAnalyticsModule, ScreenTrackingService } from '@angular/fire
     AppRoutingModule,
     AngularFirePerformanceModule,
     AngularFireAnalyticsModule,
+    AngularFireAuthModule,
   ],
   providers: [
-    StatusBar,
-    SplashScreen,
+    ScreenTrackingService,
+    UserTrackingService,
     {
       provide: RouteReuseStrategy,
       useClass: IonicRouteStrategy,
     },
-    { provide: REGION, useValue: 'europe-west1' },
-    ScreenTrackingService,
+    {
+      provide: REGION,
+      useValue: 'europe-west1',
+    },
   ],
   bootstrap: [AppComponent],
 })

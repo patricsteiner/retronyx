@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { RetroBoard, RetroBoardEntry } from './model';
+import { RetroBoard, RetroBoardEntry, User } from './model';
 import { BoardService } from './board.service';
 import { AlertController, ModalController, NavController } from '@ionic/angular';
 import { ActivatedRoute } from '@angular/router';
-import { filter, map, take, tap } from 'rxjs/operators';
-import { UserService } from '../user.service';
+import { filter, map, tap } from 'rxjs/operators';
+import { AuthService } from '../auth.service';
 import { NewBoardModalComponent } from './new-board-modal/new-board-modal.component';
 import { AboutModalComponent } from '../about-modal/about-modal.component';
 
@@ -17,14 +17,14 @@ import { AboutModalComponent } from '../about-modal/about-modal.component';
 export class BoardPage implements OnInit {
   board$: Observable<RetroBoard> = this.retroBoardService.board$;
   entries$: Observable<RetroBoardEntry[]> = this.retroBoardService.entries$;
-  username$: Observable<string> = this.userService.username$;
+  user$: Observable<User> = this.userService.user$;
 
   constructor(
     private retroBoardService: BoardService,
     private alertController: AlertController,
     private route: ActivatedRoute,
     private navCtrl: NavController,
-    private userService: UserService,
+    private userService: AuthService,
     public modalController: ModalController
   ) {
     this.route.paramMap
@@ -32,7 +32,7 @@ export class BoardPage implements OnInit {
         map((params) => params.get('id')),
         filter((id) => !!id),
         tap(async () => {
-          if (!(await this.userService.currentUser())) {
+          if (!(await this.userService.isSignedIn())) {
             this.showLoginPopup();
           }
         })
@@ -47,7 +47,7 @@ export class BoardPage implements OnInit {
   }
 
   async showLoginPopup() {
-    const username = await this.username$.pipe(take(1)).toPromise();
+    const user = await this.userService.currentUser();
     const alertDialog = await this.alertController.create({
       header: "What's your name?",
       subHeader: '',
@@ -55,23 +55,18 @@ export class BoardPage implements OnInit {
         {
           name: 'name',
           type: 'text',
-          value: username,
+          value: user?.name,
           placeholder: 'Please enter your name...',
         },
       ],
       buttons: [
-        {
-          text: 'Abort',
-          role: 'cancel',
-          cssClass: 'secondary',
-        },
         {
           text: 'OK',
           handler: (input) => {
             if (!input.name || !input.name.trim()) {
               return false;
             }
-            this.userService.login(input.name);
+            this.userService.signInWithName(input.name);
           },
         },
       ],

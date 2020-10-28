@@ -1,14 +1,19 @@
 // @ts-ignore
 import Timestamp = firebase.firestore.Timestamp;
 
+export interface User {
+  id: string;
+  name: string;
+}
+
 export class RetroBoard {
   id?: string;
   createdAt?: Timestamp;
-  createdBy: string;
+  createdBy: User;
   title: string;
   cards: RetroCard[];
 
-  constructor(title: string, createdBy: string, template: string) {
+  constructor(title: string, createdBy: User, template: string) {
     this.title = title;
     this.createdBy = createdBy;
     if (template.toLowerCase() === 'de') {
@@ -47,7 +52,7 @@ export interface RetroBoardEntry {
   cardIdx: number;
   text: string;
   likes: string[];
-  user: string;
+  user: User;
   flag?: boolean;
   deleted?: boolean;
 }
