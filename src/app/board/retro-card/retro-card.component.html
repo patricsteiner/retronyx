@@ -22,6 +22,7 @@
         <ion-item *ngIf="!entry.deleted">
           <ion-chip class="user" [ngStyle]="{ background: entry.user.id | colorHash }">
             <ion-label
+              class="ion-text-wrap"
               [ngStyle]="{ color: entry.user.id | colorHash: true }"
               title="{{ entry.user?.name || 'Unknown' }}"
               >{{ entry.user?.name || 'Unknown' }}</ion-label

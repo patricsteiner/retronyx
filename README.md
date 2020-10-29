@@ -20,6 +20,7 @@ A fresh app for online retrospectives.
 
 ## Potential features
 
+- [ ] Custom user color
 - [ ] Action items (or make better use of the flags?)
 - [ ] Add/remove cards
 - [ ] Click/hover on a user to highlight his items

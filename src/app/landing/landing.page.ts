@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { NewBoardModalComponent } from '../shared/new-board-modal/new-board-modal.component';
+import { AboutModalComponent } from '../shared/about-modal/about-modal.component';
 
 @Component({
   selector: 'app-landing',
@@ -16,6 +17,14 @@ export class LandingPage implements OnInit {
     const modal = await this.modalController.create({
       component: NewBoardModalComponent,
       cssClass: 'new-board-modal',
+    });
+    await modal.present();
+  }
+
+  async showAboutModal() {
+    const modal = await this.modalController.create({
+      component: AboutModalComponent,
+      cssClass: 'about-modal',
     });
     await modal.present();
   }

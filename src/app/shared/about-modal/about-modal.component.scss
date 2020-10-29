@@ -10,3 +10,14 @@
 ion-card {
   overflow: auto;
 }
+
+ul {
+  margin: 0;
+  li {
+    margin: 8px 0;
+  }
+  .question {
+    font-weight: bold;
+    font-style: italic;
+  }
+}

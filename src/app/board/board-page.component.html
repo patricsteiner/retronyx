@@ -18,6 +18,7 @@
 <ion-footer *ngIf="board$ | async as board">
   <ion-toolbar>
     <div id="users">
+      <ion-text color="medium" id="users-label">Participants: </ion-text>
       <ion-chip
         class="user"
         *ngFor="let participant of participants$ | async"

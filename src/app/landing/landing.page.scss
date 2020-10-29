@@ -1,8 +1,17 @@
-div {
+main {
   margin-top: 50px;
   text-align: center;
 
   img {
     max-width: 300px;
+  }
+}
+
+#more {
+  opacity: 0.5;
+  margin: 12px;
+  text-align: center;
+  ion-button {
+    font-size: 70%;
   }
 }
