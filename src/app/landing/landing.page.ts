@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { NewBoardModalComponent } from '../new-board-modal/new-board-modal.component';
 import { ModalController } from '@ionic/angular';
+import { NewBoardModalComponent } from '../shared/new-board-modal/new-board-modal.component';
 
 @Component({
   selector: 'app-landing',
-  templateUrl: './landing.component.html',
-  styleUrls: ['./landing.component.scss'],
+  templateUrl: './landing.page.html',
+  styleUrls: ['./landing.page.scss'],
 })
-export class LandingComponent implements OnInit {
+export class LandingPage implements OnInit {
   constructor(private modalController: ModalController) {}
 
   ngOnInit() {}

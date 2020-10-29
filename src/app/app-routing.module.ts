@@ -7,9 +7,12 @@ const routes: Routes = [
     loadChildren: () => import('./board/board.module').then((m) => m.BoardPageModule),
   },
   {
-    path: '',
-    redirectTo: 'board',
-    pathMatch: 'full',
+    path: 'landing',
+    loadChildren: () => import('./landing/landing.module').then((m) => m.LandingPageModule),
+  },
+  {
+    path: '**',
+    redirectTo: 'landing',
   },
 ];
 

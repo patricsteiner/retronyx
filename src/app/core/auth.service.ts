@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
-import { User } from './board/model';
+import { User } from '../board/model';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { map, switchMap, take } from 'rxjs/operators';
 import { merge, Subject } from 'rxjs';
+import { AlertController } from '@ionic/angular';
 
 @Injectable({
   providedIn: 'root',
@@ -24,7 +25,7 @@ export class AuthService {
     this.afAuth.authState
   ).pipe(map(this.afAuthUserToUser));
 
-  constructor(private afAuth: AngularFireAuth) {}
+  constructor(private afAuth: AngularFireAuth, private alertController: AlertController) {}
 
   currentUser(): Promise<User | null> {
     return this.user$.pipe(take(1)).toPromise();
@@ -48,5 +49,33 @@ export class AuthService {
     if (afAuthUser) {
       return { id: afAuthUser.uid, name: afAuthUser.displayName };
     } else return null;
+  }
+
+  async showLoginPopup() {
+    const user = await this.currentUser();
+    const alertDialog = await this.alertController.create({
+      header: "What's your name?",
+      subHeader: '',
+      inputs: [
+        {
+          name: 'name',
+          type: 'text',
+          value: user?.name,
+          placeholder: 'Please enter your name...',
+        },
+      ],
+      buttons: [
+        {
+          text: 'OK',
+          handler: (input) => {
+            if (!input.name || !input.name.trim()) {
+              return false;
+            }
+            this.signInWithName(input.name);
+          },
+        },
+      ],
+    });
+    await alertDialog.present();
   }
 }

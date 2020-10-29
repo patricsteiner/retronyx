@@ -4,7 +4,7 @@ import { Participant, RetroBoard, RetroBoardEntry } from './model';
 import { filter, switchMap, tap } from 'rxjs/operators';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AngularFireFunctions } from '@angular/fire/functions';
-import { AuthService } from '../auth.service';
+import { AuthService } from '../core/auth.service';
 import * as firebase from 'firebase/app';
 import FieldValue = firebase.firestore.FieldValue;
 import Timestamp = firebase.firestore.Timestamp;

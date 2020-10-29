@@ -2,12 +2,10 @@ import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/
 import { combineLatest, Observable, Subject } from 'rxjs';
 import { Participant, RetroBoard, RetroBoardEntry, User } from './model';
 import { BoardService } from './board.service';
-import { AlertController, ModalController, NavController } from '@ionic/angular';
+import { AlertController, NavController } from '@ionic/angular';
 import { ActivatedRoute } from '@angular/router';
 import { filter, map, takeUntil, tap } from 'rxjs/operators';
-import { AuthService } from '../auth.service';
-import { NewBoardModalComponent } from './new-board-modal/new-board-modal.component';
-import { AboutModalComponent } from '../about-modal/about-modal.component';
+import { AuthService } from '../core/auth.service';
 
 @Component({
   templateUrl: 'board-page.component.html',
@@ -18,7 +16,7 @@ export class BoardPage implements OnInit, OnDestroy {
   board$: Observable<RetroBoard> = this.boardService.board$;
   entries$: Observable<RetroBoardEntry[]> = this.boardService.entries$;
   participants$: Observable<Participant[]> = this.boardService.participants$;
-  user$: Observable<User> = this.userService.user$;
+  user$: Observable<User> = this.authService.user$;
   isDone$: Observable<boolean> = combineLatest([this.participants$, this.user$]).pipe(
     filter(([participants, user]) => !!participants && !!user),
     map(([participants, user]) => {
@@ -27,23 +25,22 @@ export class BoardPage implements OnInit, OnDestroy {
     })
   );
 
-  destroy$ = new Subject();
+  private destroy$ = new Subject();
 
   constructor(
     private boardService: BoardService,
     private alertController: AlertController,
     private route: ActivatedRoute,
     private navCtrl: NavController,
-    private userService: AuthService,
-    private modalController: ModalController
+    private authService: AuthService
   ) {
     this.route.paramMap
       .pipe(
         map((params) => params.get('id')),
         filter((id) => !!id),
         tap(async () => {
-          if (!(await this.userService.isSignedIn())) {
-            this.showLoginPopup();
+          if (!(await this.authService.isSignedIn())) {
+            this.authService.showLoginPopup();
           }
         })
       )
@@ -69,52 +66,8 @@ export class BoardPage implements OnInit, OnDestroy {
     return this.entries$.pipe(map((entries) => entries.filter((entry) => entry.cardIdx === cardIdx)));
   }
 
-  async showLoginPopup() {
-    const user = await this.userService.currentUser();
-    const alertDialog = await this.alertController.create({
-      header: "What's your name?",
-      subHeader: '',
-      inputs: [
-        {
-          name: 'name',
-          type: 'text',
-          value: user?.name,
-          placeholder: 'Please enter your name...',
-        },
-      ],
-      buttons: [
-        {
-          text: 'OK',
-          handler: (input) => {
-            if (!input.name || !input.name.trim()) {
-              return false;
-            }
-            this.userService.signInWithName(input.name);
-          },
-        },
-      ],
-    });
-    await alertDialog.present();
-  }
-
-  async showNewBoardModal() {
-    const modal = await this.modalController.create({
-      component: NewBoardModalComponent,
-      cssClass: 'new-board-modal',
-    });
-    await modal.present();
-  }
-
-  async showAboutModal() {
-    const modal = await this.modalController.create({
-      component: AboutModalComponent,
-      cssClass: 'about-modal',
-    });
-    await modal.present();
-  }
-
   async setDone(boardId: string, done: boolean) {
-    const user = await this.userService.currentUser();
+    const user = await this.authService.currentUser();
     if (!!user) {
       this.boardService.addOrSetParticipant(boardId, { user, done });
     }

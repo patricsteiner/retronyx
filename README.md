@@ -15,17 +15,13 @@ A fresh app for online retrospectives.
 ## TODO
 
 - [ ] Loading indicator
-- [ ] 404 page
 - [ ] (maybe) Improve like visibility
 - [ ] (maybe) Reduce DB reads (e.g. readmodel)
 
 ## Potential features
 
 - [ ] Action items (or make better use of the flags?)
-- [ ] Item editing
 - [ ] Add/remove cards
-- [ ] Presence (show which users are online)
-- [ ] Readiness (users can click "done", requires presence)
 - [ ] Click/hover on a user to highlight his items
 - [ ] Login/Permissions?
 - [ ] Teams (i.e. board belongs to a team, requires login)

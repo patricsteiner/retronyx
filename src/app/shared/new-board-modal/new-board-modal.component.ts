@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { ModalController, NavController } from '@ionic/angular';
 import { FormBuilder, Validators } from '@angular/forms';
-import { BoardService } from '../board.service';
-import { CustomValidators } from '../../custom-validators';
+import { BoardService } from '../../board/board.service';
+import { CustomValidators } from '../../core/custom-validators';
 
 @Component({
   templateUrl: './new-board-modal.component.html',

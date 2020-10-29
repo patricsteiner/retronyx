@@ -1,0 +1,15 @@
+ion-header {
+  user-select: none;
+  #boardTitle {
+    user-select: text;
+  }
+  #logo {
+    height: 32px;
+    margin-left: 10px;
+    margin-right: -10px;
+  }
+  #logotext {
+    height: 20px;
+    margin: 0 20px;
+  }
+}

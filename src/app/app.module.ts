@@ -1,48 +1,15 @@
 import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-import { RouteReuseStrategy } from '@angular/router';
-
-import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
-import { IonicStorageModule } from '@ionic/storage';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
-import { AngularFireModule } from '@angular/fire';
-import { environment } from '../environments/environment';
-import { AngularFirestoreModule } from '@angular/fire/firestore';
-import { AngularFireFunctionsModule, REGION } from '@angular/fire/functions';
-import { AboutModalComponent } from './about-modal/about-modal.component';
-import { AngularFirePerformanceModule } from '@angular/fire/performance';
-import { AngularFireAnalyticsModule, ScreenTrackingService, UserTrackingService } from '@angular/fire/analytics';
-import { AngularFireAuthModule } from '@angular/fire/auth';
+import { CoreModule } from './core/core.module';
 
 @NgModule({
-  declarations: [AppComponent, AboutModalComponent],
+  declarations: [AppComponent],
   entryComponents: [],
-  imports: [
-    BrowserModule,
-    IonicModule.forRoot(),
-    AngularFireModule.initializeApp(environment.firebase),
-    IonicStorageModule.forRoot(),
-    AngularFirestoreModule,
-    AngularFireFunctionsModule,
-    AppRoutingModule,
-    AngularFirePerformanceModule,
-    AngularFireAnalyticsModule,
-    AngularFireAuthModule,
-  ],
-  providers: [
-    ScreenTrackingService,
-    UserTrackingService,
-    {
-      provide: RouteReuseStrategy,
-      useClass: IonicRouteStrategy,
-    },
-    {
-      provide: REGION,
-      useValue: 'europe-west1',
-    },
-  ],
+  imports: [CoreModule, AppRoutingModule],
   bootstrap: [AppComponent],
+  exports: [],
 })
 export class AppModule {}
+// Project architecture according to https://medium.com/@tomastrajan/how-to-build-epic-angular-app-with-clean-architecture-91640ed1656

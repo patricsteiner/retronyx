@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
 import { RetroBoardEntry, RetroCard, User } from '../model';
-import { AuthService } from '../../auth.service';
+import { AuthService } from '../../core/auth.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { BoardService } from '../board.service';

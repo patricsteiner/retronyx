@@ -1,27 +1,4 @@
-<ion-header [translucent]="true">
-  <ion-toolbar color="light">
-    <ion-buttons slot="start">
-      <img src="assets/logo.png" id="logo" />
-      <img src="assets/logotext.png" id="logotext" />
-      <span id="boardTitle"
-        ><strong>{{ (board$ | async)?.title }}</strong></span
-      >
-    </ion-buttons>
-
-    <ion-buttons slot="end">
-      <ion-button color="primary" fill="clear" (click)="showNewBoardModal()">
-        <ion-icon name="add-outline"></ion-icon>
-      </ion-button>
-      <ion-button color="dark" fill="clear" (click)="showLoginPopup()">
-        <ion-icon *ngIf="user$ | async" name="person"></ion-icon>
-        <ion-icon *ngIf="!(user$ | async)" name="person-outline"></ion-icon>
-      </ion-button>
-      <ion-button color="dark" fill="clear" (click)="showAboutModal()">
-        <ion-icon name="information-circle-outline"></ion-icon>
-      </ion-button>
-    </ion-buttons>
-  </ion-toolbar>
-</ion-header>
+<app-header [title]="(board$ | async)?.title"></app-header>
 
 <ion-content [fullscreen]="false">
   <ion-grid *ngIf="board$ | async as board; else noBoard">
@@ -56,7 +33,6 @@
     <ion-buttons slot="end">
       <ion-button *ngIf="!(isDone$ | async)" color="success" fill="solid" (click)="setDone(board.id, true)">
         <ion-label>Done</ion-label>
-        <!--        <ion-icon name="checkmark-circle-outline"></ion-icon>-->
       </ion-button>
       <ion-button *ngIf="isDone$ | async" color="medium" fill="clear" (click)="setDone(board.id, false)">
         <ion-label>Not done</ion-label>
@@ -66,5 +42,9 @@
 </ion-footer>
 
 <ng-template #noBoard>
-  <app-landing></app-landing>
+  <div id="notFound">
+    <h1>Nothing here... 👻</h1>
+    <br />
+    <ion-button routerLink="/" routerDirection="root" fill="none">go home</ion-button>
+  </div>
 </ng-template>
