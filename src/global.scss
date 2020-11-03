@@ -36,3 +36,10 @@
 .toast {
   text-align: center;
 }
+
+/* FIX for icon display in edge: https://github.com/ionic-team/ionicons/issues/792 */
+ion-icon svg {
+  stroke-width: 8%;
+  fill: none;
+  stroke: currentColor;
+}
