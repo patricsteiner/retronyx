@@ -4,7 +4,7 @@ import { AuthService } from '../../core/auth.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { BoardService } from '../board.service';
-import { AlertController, ToastController } from '@ionic/angular';
+import { AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'app-retro-card',
@@ -34,8 +34,7 @@ export class RetroCardComponent implements OnInit, OnDestroy, OnChanges {
   constructor(
     private userService: AuthService,
     private retroBoardService: BoardService,
-    private alertController: AlertController,
-    private toastController: ToastController
+    private alertController: AlertController
   ) {}
 
   ngOnInit() {
@@ -178,14 +177,13 @@ export class RetroCardComponent implements OnInit, OnDestroy, OnChanges {
     alertDialog.present();
   }
 
-  async showHint(event) {
+  async showSlidingOptions(event, slidingItem) {
     event.preventDefault();
-    const toast = await this.toastController.create({
-      message: 'Slide the item right or left for additional actions 🐱‍👤',
-      duration: 2000,
-      color: 'tertiary',
-      cssClass: 'toast',
-    });
-    toast.present();
+    console.log(slidingItem);
+    if ((await slidingItem.getOpenAmount()) === 0) {
+      slidingItem.open('end');
+    } else {
+      slidingItem.close();
+    }
   }
 }

@@ -18,7 +18,11 @@
   </ion-card-header>
   <ion-card-content>
     <ion-list>
-      <ion-item-sliding *ngFor="let entry of entries" #slidingItem (contextmenu)="showHint($event)">
+      <ion-item-sliding
+        *ngFor="let entry of entries"
+        #slidingItem
+        (contextmenu)="showSlidingOptions($event, slidingItem)"
+      >
         <ion-item *ngIf="!entry.deleted">
           <ion-chip class="user" [ngStyle]="{ background: entry.user.id | colorHash }">
             <ion-label
@@ -41,13 +45,11 @@
             </ng-template>
           </ion-chip>
         </ion-item>
-        <ion-item-options side="start">
+        <ion-item-options side="end">
           <ion-item-option color="light" (click)="toggleFlag(entry.id); slidingItem.close()">
             <ion-icon *ngIf="entry.flag" slot="icon-only" name="flag-outline"></ion-icon>
             <ion-icon *ngIf="!entry.flag" slot="icon-only" name="flag"></ion-icon>
           </ion-item-option>
-        </ion-item-options>
-        <ion-item-options side="end">
           <ion-item-option color="primary" (click)="showEditEntryPopup(entry.id, entry.text)">
             <ion-icon slot="icon-only" name="pencil"></ion-icon>
           </ion-item-option>
