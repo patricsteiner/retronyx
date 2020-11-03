@@ -40,7 +40,7 @@ export class BoardPage implements OnInit, OnDestroy {
         filter((id) => !!id),
         tap(async () => {
           if (!(await this.authService.isSignedIn())) {
-            this.authService.showLoginPopup();
+            await this.authService.showLoginPopup();
           }
         })
       )
@@ -70,6 +70,14 @@ export class BoardPage implements OnInit, OnDestroy {
     const user = await this.authService.currentUser();
     if (!!user) {
       this.boardService.addOrSetParticipant(boardId, { user, done });
+    } else {
+      await this.authService.showLoginPopup();
+    }
+  }
+
+  async deleteBoard(boardId: string) {
+    if (confirm('Do you really want to delete this board?')) {
+      await this.boardService.deleteBoard(boardId);
     }
   }
 }

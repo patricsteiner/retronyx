@@ -38,6 +38,15 @@
       <ion-button *ngIf="isDone$ | async" color="medium" fill="clear" (click)="setDone(board.id, false)">
         <ion-label>Not done</ion-label>
       </ion-button>
+      <ion-button
+        *ngIf="(user$ | async)?.id === board.createdBy?.id"
+        color="danger"
+        (click)="deleteBoard(board.id)"
+        size="small"
+      >
+        <ion-label>Delete board</ion-label>
+        <ion-icon name="trash-outline"></ion-icon>
+      </ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-footer>

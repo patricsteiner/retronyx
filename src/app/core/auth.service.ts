@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { User } from '../board/model';
 import { AngularFireAuth } from '@angular/fire/auth';
-import { map, switchMap, take } from 'rxjs/operators';
+import { map, shareReplay, switchMap, take } from 'rxjs/operators';
 import { merge, Subject } from 'rxjs';
 import { AlertController } from '@ionic/angular';
 
@@ -23,7 +23,7 @@ export class AuthService {
       })
     ),
     this.afAuth.authState
-  ).pipe(map(this.afAuthUserToUser));
+  ).pipe(map(this.afAuthUserToUser), shareReplay({ bufferSize: 1, refCount: true }));
 
   constructor(private afAuth: AngularFireAuth, private alertController: AlertController) {}
 

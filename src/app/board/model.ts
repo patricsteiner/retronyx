@@ -17,6 +17,7 @@ export class RetroBoard {
   createdBy: User;
   title: string;
   cards: RetroCard[];
+  deleted?: boolean;
 
   constructor(title: string, createdBy: User, template: string) {
     this.title = title;

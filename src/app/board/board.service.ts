@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, ReplaySubject } from 'rxjs';
 import { Participant, RetroBoard, RetroBoardEntry } from './model';
-import { filter, switchMap, tap } from 'rxjs/operators';
+import { filter, map, switchMap, tap } from 'rxjs/operators';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { AuthService } from '../core/auth.service';
@@ -25,7 +25,8 @@ export class BoardService {
         .pipe(
           filter((value) => !!value),
           tap((it) => (it.id = id)),
-          tap((board) => console.debug('READ 1 BOARD FROM DB', board))
+          // tap((board) => console.debug('READ 1 BOARD FROM DB', board)),
+          map((board) => (board.deleted !== true ? board : null))
         )
     )
   );
@@ -38,8 +39,8 @@ export class BoardService {
         .collection<RetroBoardEntry>('entries')
         .valueChanges({ idField: 'id' })
         .pipe(
-          filter((value) => !!value),
-          tap((entries) => console.debug(`READ ${entries.length} ENTRIES FROM DB`, entries))
+          filter((value) => !!value)
+          // tap((entries) => console.debug(`READ ${entries.length} ENTRIES FROM DB`, entries))
         )
     )
   );
@@ -52,8 +53,8 @@ export class BoardService {
         .collection<Participant>('participants')
         .valueChanges({ idField: 'id' })
         .pipe(
-          filter((value) => !!value),
-          tap((participants) => console.debug(`READ ${participants.length} PARTICIPANTS FROM DB`, participants))
+          filter((value) => !!value)
+          // tap((participants) => console.debug(`READ ${participants.length} PARTICIPANTS FROM DB`, participants))
         )
     )
   );
@@ -163,6 +164,9 @@ export class BoardService {
 
   async createNewBoard(title: string, template: string) {
     title = title.substring(0, 100);
+    if (!(await this.userService.isSignedIn())) {
+      await this.userService.signInWithName('BoardMaster');
+    }
     const user = await this.userService.currentUser();
     const board = new RetroBoard(title, user, template);
     return this.boardsCollection.add({ ...board, createdAt: FieldValue.serverTimestamp() as Timestamp });
@@ -174,5 +178,9 @@ export class BoardService {
       .collection('participants')
       .doc<Participant>(participant.user.id)
       .set(participant, { merge: true });
+  }
+
+  async deleteBoard(boardId: string) {
+    await this.boardsCollection.doc(boardId).update({ deleted: true });
   }
 }
