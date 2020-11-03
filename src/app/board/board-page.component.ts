@@ -2,10 +2,11 @@ import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/
 import { combineLatest, Observable, Subject } from 'rxjs';
 import { Participant, RetroBoard, RetroBoardEntry, User } from './model';
 import { BoardService } from './board.service';
-import { AlertController, NavController } from '@ionic/angular';
+import { AlertController, NavController, PopoverController } from '@ionic/angular';
 import { ActivatedRoute } from '@angular/router';
 import { filter, map, takeUntil, tap } from 'rxjs/operators';
 import { AuthService } from '../core/auth.service';
+import { AdminActionsPopoverComponent } from './admin-actions-popover/admin-actions-popover.component';
 
 @Component({
   templateUrl: 'board-page.component.html',
@@ -32,7 +33,8 @@ export class BoardPage implements OnInit, OnDestroy {
     private alertController: AlertController,
     private route: ActivatedRoute,
     private navCtrl: NavController,
-    private authService: AuthService
+    private authService: AuthService,
+    private popoverController: PopoverController
   ) {
     this.route.paramMap
       .pipe(
@@ -75,9 +77,13 @@ export class BoardPage implements OnInit, OnDestroy {
     }
   }
 
-  async deleteBoard(boardId: string) {
-    if (confirm('Do you really want to delete this board?')) {
-      await this.boardService.deleteBoard(boardId);
-    }
+  async showActionsPopover(event, boardId: string) {
+    const popover = await this.popoverController.create({
+      component: AdminActionsPopoverComponent,
+      componentProps: { boardId },
+      event,
+      translucent: true,
+    });
+    return await popover.present();
   }
 }

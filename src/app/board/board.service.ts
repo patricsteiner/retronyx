@@ -181,6 +181,16 @@ export class BoardService {
   }
 
   async deleteBoard(boardId: string) {
-    await this.boardsCollection.doc(boardId).update({ deleted: true });
+    await this.boardsCollection.doc<RetroBoard>(boardId).update({ deleted: true });
+  }
+
+  async wipeBoard(boardId: string) {
+    const entriesQuerySnapshot = await this.boardsCollection.doc<RetroBoard>(boardId).collection('entries').ref.get();
+    const participantsQuerySnapshot = await this.boardsCollection
+      .doc<RetroBoard>(boardId)
+      .collection('participants')
+      .ref.get();
+    entriesQuerySnapshot.forEach((doc) => doc.ref.delete());
+    participantsQuerySnapshot.forEach((doc) => doc.ref.delete());
   }
 }

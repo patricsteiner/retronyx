@@ -18,7 +18,7 @@
 <ion-footer *ngIf="board$ | async as board">
   <ion-toolbar>
     <div id="users">
-      <ion-text color="medium" id="users-label">Participants: </ion-text>
+      <ion-text color="medium" id="users-label">Participants:</ion-text>
       <ion-chip
         class="user"
         *ngFor="let participant of participants$ | async"
@@ -40,12 +40,11 @@
       </ion-button>
       <ion-button
         *ngIf="(user$ | async)?.id === board.createdBy?.id"
-        color="danger"
-        (click)="deleteBoard(board.id)"
+        (click)="showActionsPopover($event, board.id)"
         size="small"
+        fill="clear"
       >
-        <ion-label>Delete board</ion-label>
-        <ion-icon name="trash-outline"></ion-icon>
+        <ion-icon color="medium" name="ellipsis-vertical"></ion-icon>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
@@ -55,6 +54,6 @@
   <div id="notFound">
     <h1>Nothing here... 👻</h1>
     <br />
-    <ion-button routerLink="/" routerDirection="root" fill="none">go home</ion-button>
+    <ion-button routerLink="/" routerDirection="root" fill="clear">go home</ion-button>
   </div>
 </ng-template>

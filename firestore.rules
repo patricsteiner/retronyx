@@ -17,16 +17,26 @@ service cloud.firestore {
       allow read: if true;
       allow create: if true;
       allow update: if true;
-      allow delete: if false;
+      allow delete: if isBoardAuthor(boardId);
     }
 
     match /boards/{boardId}/participants/{userId} {
       allow read: if true;
-      allow write: if isOwner(userId);
+      allow create: if true;
+      allow update: if true;
+      allow delete: if isBoardAuthor(boardId);
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
     }
 
     function isOwner(userId) {
-      return request.auth != null && request.auth.uid == userId;
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isBoardAuthor(boardId) {
+      return isSignedIn() && get(/databases/$(database)/documents/boards/$(boardId)).data.createdBy.id == request.auth.uid;
     }
   }
 }
