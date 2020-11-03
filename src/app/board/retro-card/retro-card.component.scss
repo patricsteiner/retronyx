@@ -23,6 +23,10 @@ ion-card {
   user-select: text;
 }
 
+.lowlight {
+  opacity: 0.1;
+}
+
 .likes {
   transform: scale(0.7);
 }

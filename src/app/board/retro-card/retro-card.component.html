@@ -24,8 +24,12 @@
         #slidingItem
         (contextmenu)="showSlidingOptions($event, slidingItem)"
       >
-        <ion-item *ngIf="!entry.deleted">
-          <ion-chip class="user" [ngStyle]="{ background: entry.user.id | colorHash }">
+        <ion-item *ngIf="!entry.deleted" [class.lowlight]="highlightedUserId && entry.user.id !== highlightedUserId">
+          <ion-chip
+            class="user"
+            [ngStyle]="{ background: entry.user.id | colorHash }"
+            (click)="highlightService.highLight(entry.user.id)"
+          >
             <ion-label
               class="ion-text-wrap"
               [ngStyle]="{ color: entry.user.id | colorHash: true }"

@@ -5,6 +5,7 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { BoardService } from '../board.service';
 import { AlertController } from '@ionic/angular';
+import { HighlightService } from '../highlight.service';
 
 @Component({
   selector: 'app-retro-card',
@@ -18,6 +19,9 @@ export class RetroCardComponent implements OnInit, OnDestroy, OnChanges {
 
   @Input()
   entries: RetroBoardEntry[];
+
+  @Input()
+  highlightedUserId: string;
 
   @Input()
   boardId: string; // TODO fix, this is ugly
@@ -34,7 +38,8 @@ export class RetroCardComponent implements OnInit, OnDestroy, OnChanges {
   constructor(
     private userService: AuthService,
     private retroBoardService: BoardService,
-    private alertController: AlertController
+    private alertController: AlertController,
+    public highlightService: HighlightService
   ) {}
 
   ngOnInit() {

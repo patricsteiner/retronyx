@@ -7,6 +7,7 @@
         <app-retro-card
           [retroCard]="board.cards[i]"
           [entries]="entriesForCard(i) | async"
+          [highlightedUserId]="highlightService.highlightedUserId$ | async"
           [cardIdx]="i"
           [boardId]="board.id"
         ></app-retro-card>
@@ -22,6 +23,7 @@
       <ion-chip
         class="user"
         *ngFor="let participant of participants$ | async"
+        (click)="highlightService.highLight(participant.user.id)"
         [ngStyle]="{ background: participant.user.id | colorHash }"
         [class.done]="participant.done"
         title="{{ participant.user.name }}"

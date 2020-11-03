@@ -7,6 +7,7 @@ import { ActivatedRoute } from '@angular/router';
 import { filter, map, takeUntil, tap } from 'rxjs/operators';
 import { AuthService } from '../core/auth.service';
 import { AdminActionsPopoverComponent } from './admin-actions-popover/admin-actions-popover.component';
+import { HighlightService } from './highlight.service';
 
 @Component({
   templateUrl: 'board-page.component.html',
@@ -34,7 +35,8 @@ export class BoardPage implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private navCtrl: NavController,
     private authService: AuthService,
-    private popoverController: PopoverController
+    private popoverController: PopoverController,
+    public highlightService: HighlightService
   ) {
     this.route.paramMap
       .pipe(
