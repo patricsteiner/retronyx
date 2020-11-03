@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ModalController, NavController } from '@ionic/angular';
+import { ModalController, NavController, ToastController } from '@ionic/angular';
 import { FormBuilder, Validators } from '@angular/forms';
 import { BoardService } from '../../board/board.service';
 import { CustomValidators } from '../../core/custom-validators';
@@ -19,7 +19,8 @@ export class NewBoardModalComponent {
     private fb: FormBuilder,
     private modalController: ModalController,
     private retroBoardService: BoardService,
-    private navCtrl: NavController
+    private navCtrl: NavController,
+    private toastController: ToastController
   ) {}
 
   submit() {
@@ -28,7 +29,7 @@ export class NewBoardModalComponent {
       return;
     }
     this.retroBoardService.createNewBoard(this.form.value.title, this.form.value.template).then(
-      (ref) => this.navigateToBoard(ref.id),
+      (ref) => this.navigateAndUrlToClipboard(ref.id),
       () => {
         this.error = 'Sorry, could not create the board... Some error happened :(';
       }
@@ -40,7 +41,25 @@ export class NewBoardModalComponent {
     this.modalController.dismiss();
   }
 
-  navigateToBoard(id: string) {
-    this.navCtrl.navigateForward('/board/' + id);
+  async navigateAndUrlToClipboard(id: string) {
+    await this.navCtrl.navigateForward('/board/' + id);
+    const selBox = document.createElement('textarea');
+    selBox.style.position = 'fixed';
+    selBox.style.left = '0';
+    selBox.style.top = '0';
+    selBox.style.opacity = '0';
+    selBox.value = window.location.href;
+    document.body.appendChild(selBox);
+    selBox.focus();
+    selBox.select();
+    document.execCommand('copy');
+    document.body.removeChild(selBox);
+    const toast = await this.toastController.create({
+      message: '📋 Link copied to clipboard',
+      duration: 3000,
+      cssClass: 'toast',
+      color: 'success',
+    });
+    toast.present();
   }
 }
