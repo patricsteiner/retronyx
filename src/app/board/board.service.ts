@@ -148,7 +148,7 @@ export class BoardService {
   }
 
   updateCardTitle(boardId: string, cardIdx: number, title: string, emoji: string) {
-    title = title.substring(0, 50);
+    title = title.substring(0, 100);
     emoji = emoji.substring(0, 4);
     const newBoard = { ...this.localBoardState.value };
     newBoard.cards[cardIdx].title = title;

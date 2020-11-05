@@ -17,7 +17,6 @@ A fresh app for online retrospectives.
 - Custom user color
 - Action items (or make better use of the flags?)
 - Add/remove cards
-- Click/hover on a user to highlight his items
 - Login/Permissions?
 - Teams (i.e. board belongs to a team, requires login)
 - I18N (currently only english is supported)
